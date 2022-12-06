@@ -371,9 +371,10 @@ class _HomeState extends State<Home> {
                                         context,
                                         CupertinoPageRoute(
                                             builder: (_) => Category(
-                                                  sublimals: data_Subliminals[i]
-                                                      ['id'],
-                                                )));
+                                                sublimals: data_Subliminals[i]
+                                                    ['id'],
+                                                name: data_Subliminals[i]
+                                                    ['name'])));
                                   },
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,

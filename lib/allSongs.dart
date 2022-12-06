@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sns/PageManager.dart';
+import 'package:sns/SamplePlay.dart';
 import 'package:sns/login.dart';
 import 'package:sns/songs.dart';
 import 'NoInternet.dart';
@@ -138,13 +139,12 @@ class _AllSongsState extends State<AllSongs> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: c.getAppBar("Sound N Soulful"),
+      appBar: c.getAppBar("Sound & Soulful"),
       drawer: c.getDrawer(context),
       backgroundColor: Colors.white,
       body: SafeArea(
           child: ListView(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
@@ -177,7 +177,7 @@ class _AllSongsState extends State<AllSongs> {
                                   Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                          builder: (_) => AudioManager(
+                                          builder: (_) => MyPlayer(
                                                 index: i,
                                                 allData: data_AllSongs,
                                                 maxlength: data_AllSongs.length,

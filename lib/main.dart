@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:sns/SamplePlay.dart';
 import 'package:sns/constants.dart';
 import 'package:sns/home.dart';
 import 'package:sns/intros.dart';
@@ -12,7 +13,7 @@ import 'package:sns/login.dart';
 void main() async {
   // await JustAudioBackground.init(
   //   androidNotificationChannelId: 'com.allied.bg_demo.channel.audio',
-  //   androidNotificationChannelName: 'Sound N Soulful',
+  //   androidNotificationChannelName: 'Sound & Soulful',
   //   androidNotificationOngoing: true,
   // );
   runApp(const MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Sound N Soulful',
+      title: 'Sound & Soulful',
       theme:
           ThemeData(primarySwatch: Colors.grey, fontFamily: 'Poppins-Regular'),
       home: MyHomePage(),

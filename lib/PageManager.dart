@@ -235,7 +235,7 @@ class _AudioManagerState extends State<AudioManager> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "All to Playlist",
+                  "Add to Playlist",
                   style: TextStyle(
                       color: c.primaryColor(), fontWeight: FontWeight.w800),
                 ),
@@ -409,7 +409,8 @@ class _AudioManagerState extends State<AudioManager> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: c.getAppBar("Sound N Soulful"),
+      // backgroundColor: Colors.white,
+      appBar: c.getAppBar("Sound & Soulful"),
       drawer: c.getDrawer(context),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -459,7 +460,7 @@ class _AudioManagerState extends State<AudioManager> {
                   ),
                   Center(
                     child: SizedBox(
-                      height: c.deviceHeight(context) * 0.42,
+                      height: c.deviceHeight(context) * 0.4,
                       child: Container(
                         color: Colors.white,
                         child: ListView.builder(
@@ -620,16 +621,39 @@ class _AudioManagerState extends State<AudioManager> {
                                     child: const CircularProgressIndicator(),
                                   );
                                 case ButtonState.paused:
-                                  return IconButton(
-                                    icon: const Icon(Icons.play_arrow),
-                                    iconSize: 42.0,
-                                    onPressed: _pageManager.play,
+                                  return Stack(
+                                    alignment: Alignment(0.02, 0.1),
+                                    children: [
+                                      Container(
+                                        width: 120,
+                                        height: 70,
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.play_arrow),
+                                        iconSize: 42.0,
+                                        onPressed: _pageManager.play,
+                                      )
+                                    ],
                                   );
                                 case ButtonState.playing:
-                                  return IconButton(
-                                    icon: const Icon(Icons.pause),
-                                    iconSize: 39.0,
-                                    onPressed: _pageManager.pause,
+                                  return Stack(
+                                    alignment: Alignment(0.02, 0.1),
+                                    children: [
+                                      Image.asset(
+                                        "assets/waveform.gif",
+                                        width: 120,
+                                        height: 70,
+                                        fit: BoxFit.contain,
+                                      ),
+                                      Opacity(
+                                        opacity: 0.4,
+                                        child: IconButton(
+                                          icon: const Icon(Icons.pause),
+                                          iconSize: 39.0,
+                                          onPressed: _pageManager.pause,
+                                        ),
+                                      )
+                                    ],
                                   );
                               }
                             },
@@ -716,10 +740,10 @@ class PageManager {
         // Specify a unique ID for each media item:
         id: '1',
         // Metadata to display in the notification:
-        album: "Sound N Soulful",
+        album: "Sound & Soulful",
         title: "Now Playing",
         artUri: Uri.parse(
-            'https://cdn.shopify.com/s/files/1/0411/3815/9784/files/IMG_0469_360x.PNG?v=1615926653'),
+            'https://media2.giphy.com/media/mXbQ2IU02cGRhBO2ye/giphy.gif?cid=790b7611cb799fa691445e16c7d208e7a5019b379d27c4bd&rid=giphy.gif&ct=ts'),
       ),
     );
     _audioPlayer.playerStateStream.listen((playerState) {

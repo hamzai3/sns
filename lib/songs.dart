@@ -337,7 +337,7 @@
 //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //               children: [
 //                 Text(
-//                   "All to Playlist",
+//                   "Add to Playlist",
 //                   style: TextStyle(
 //                       color: c.primaryColor(), fontWeight: FontWeight.w800),
 //                 ),

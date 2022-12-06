@@ -7,7 +7,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sns/PLaylistPlayer.dart';
 import 'package:sns/PageManager.dart';
+import 'package:sns/SamplePlay.dart';
 import 'package:sns/login.dart';
 import 'package:sns/songs.dart';
 import 'NoInternet.dart';
@@ -85,12 +87,6 @@ class _MyPlaylistState extends State<MyPlaylist> {
       }
       decodeMyPlaylist(form_response.toString());
       c.setshared("MyPlaylist", form_response.toString());
-      // } else {
-      //   Navigator.pushAndRemoveUntil(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => NoInternet()),
-      //       ModalRoute.withName('/NoInternet'));
-      // }
     } catch (e, s) {
       print("Error " + e.toString() + " Stack " + s.toString());
     }
@@ -148,6 +144,223 @@ class _MyPlaylistState extends State<MyPlaylist> {
     });
   }
 
+  showAlert(BuildContext context, id) {
+    // print(no_postsPlay);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Edit Playlist Name",
+                  style: TextStyle(
+                      color: c.primaryColor(), fontWeight: FontWeight.w800),
+                ),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.grey,
+                    ))
+              ],
+            ),
+            content: TextFormField(
+              keyboardType: TextInputType.text,
+              // obscureText: hide_password,
+              controller: pwd,
+              style: TextStyle(
+                  fontSize: c.getFontSize(context), color: c.primaryColor()),
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: "Enter Playlist Name",
+                fillColor: c.primaryColor(),
+                filled: false, // dont forget this line
+                suffixIcon: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      c.getshared("token").then((token) {
+                        setState(() {
+                          _token = token;
+                          savePlayList(token, id, pwd.text);
+                        });
+                      });
+                    },
+                    child: Icon(Icons.edit)),
+                hintStyle: TextStyle(
+                    fontSize: c.getFontSize(context), color: c.primaryColor()),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide(
+                    style: BorderStyle.none,
+                  ),
+                ),
+                contentPadding: EdgeInsets.all(16),
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  showConfirm(BuildContext context, id) {
+    // print(no_postsPlay);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Are you sure, you wish to delete this playlist and all songs in this playlist?",
+                      style: TextStyle(
+                          color: c.primaryColor(), fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                      ))
+                ],
+              ),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CupertinoButton(
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                  CupertinoButton(
+                      child: Text("Continue"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        c.getshared("token").then((token) {
+                          deletePlayList(token, id);
+                        });
+                      })
+                ],
+              ));
+        });
+      },
+    );
+  }
+
+  savePlayList(token, id, name) async {
+    setState(() {
+      pwd.text = '';
+    });
+    try {
+      var dio = Dio();
+      // final result = await InternetAddress.lookup('google.com');
+      // if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      FormData formData = new FormData.fromMap({
+        "edit_playlist_songs": "edit_playlist_songs@sns",
+        "token": token,
+        "id": id,
+        "name": name,
+      });
+      try {
+        form_response = await dio.post(
+          c.getBaseUrl() + 'edit_playlist.php',
+          data: formData,
+        );
+      } on DioError catch (e) {
+        print(e.message);
+      }
+
+      print("formData $formData");
+      print("form_response $form_response");
+      // decodePlay(form_response.toString());
+
+      c.showInSnackBar(context, "Updated Playlist Name!");
+      c.getshared("token").then((token) {
+        setState(() {
+          _token = token;
+        });
+        if (token != '' && token != null && token != ' ' && token != 'null') {
+          c.getshared("user_id").then((user_id) {
+            // print("CatVal $value");
+            if (user_id != '' &&
+                user_id != null &&
+                user_id != ' ' &&
+                user_id != 'null') {
+              MyPlaylist(token, user_id);
+            }
+          });
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
+        }
+      });
+    } catch (e, s) {
+      print("Error " + e.toString() + " Stack " + s.toString());
+    }
+  }
+
+  deletePlayList(token, id) async {
+    setState(() {
+      pwd.text = '';
+    });
+    try {
+      var dio = Dio();
+      // final result = await InternetAddress.lookup('google.com');
+      // if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      FormData formData = new FormData.fromMap({
+        "delete_playlist": "delete_playlist@sns",
+        "token": token,
+        "id": id,
+      });
+      try {
+        form_response = await dio.post(
+          c.getBaseUrl() + 'edit_playlist.php',
+          data: formData,
+        );
+      } on DioError catch (e) {
+        print(e.message);
+      }
+
+      print("formData for deleted $formData");
+      print("form_response fore deleted $form_response");
+      // decodePlay(form_response.toString());
+
+      c.showInSnackBar(context, "Deleted Playlist!");
+      c.getshared("token").then((token) {
+        setState(() {
+          _token = token;
+        });
+        if (token != '' && token != null && token != ' ' && token != 'null') {
+          c.getshared("user_id").then((user_id) {
+            // print("CatVal $value");
+            if (user_id != '' &&
+                user_id != null &&
+                user_id != ' ' &&
+                user_id != 'null') {
+              MyPlaylist(token, user_id);
+            }
+          });
+        } else {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
+        }
+      });
+    } catch (e, s) {
+      print("Error " + e.toString() + " Stack " + s.toString());
+    }
+  }
+
   loadSong(id) async {
     // print("Token i have is $_token");
     try {
@@ -178,11 +391,11 @@ class _MyPlaylistState extends State<MyPlaylist> {
         Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (_) => AudioManager(
-                      index: 0,
-                      allData: data_Songs,
-                      maxlength: data_Songs.length,
-                    )));
+                builder: (_) => MyPlayListPlayer(
+                    index: id,
+                    allData: data_Songs,
+                    maxlength: data_Songs.length,
+                    mode: "playlist")));
       } else {
         Navigator.pushAndRemoveUntil(
             context,
@@ -198,13 +411,12 @@ class _MyPlaylistState extends State<MyPlaylist> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: c.getAppBar("Sound N Soulful"),
+      appBar: c.getAppBar("Sound & Soulful"),
       drawer: c.getDrawer(context),
       backgroundColor: Colors.white,
       body: SafeArea(
           child: ListView(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 12, 10, 0),
@@ -234,6 +446,13 @@ class _MyPlaylistState extends State<MyPlaylist> {
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int i) {
                               return GestureDetector(
+                                onLongPress: () {
+                                  setState(() {
+                                    pwd.text = data_MyPlaylist[i]['name'];
+                                    showAlert(context,
+                                        data_MyPlaylist[i]['playlist_id']);
+                                  });
+                                },
                                 onTap: () {
                                   loadSong(data_MyPlaylist[i]['playlist_id']);
                                 },
@@ -256,9 +475,26 @@ class _MyPlaylistState extends State<MyPlaylist> {
                                           fontFamily: c.fontFamily(),
                                           color: c.getColor("grey")),
                                     ),
-                                    trailing: const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(Icons.arrow_forward_ios),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            showConfirm(
+                                                context,
+                                                data_MyPlaylist[i]
+                                                    ['playlist_id']);
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(Icons.delete_forever),
+                                          ),
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(Icons.arrow_forward_ios),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),

@@ -70,7 +70,7 @@ class Constants {
             ListTile(
               leading: Icon(Icons.audio_file_outlined),
               title: Text(
-                'My Playlist',
+                'My Playlists',
                 style: TextStyle(
                     fontSize: getFontSizeLabel(context),
                     color: primaryColor(),

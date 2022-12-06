@@ -164,7 +164,7 @@ class _InAppBrowserExampleScreenState extends State<InAppBrowserExampleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: c.getAppBar("Sound N Soulful"),
+      appBar: c.getAppBar("Sound & Soulful"),
       drawer: c.getDrawer(context),
       body: WillPopScope(
         onWillPop: () => _exitApp(context),

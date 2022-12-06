@@ -83,7 +83,7 @@ class _IntrosState extends State<Intros> {
                 title: "How To Start Using Subliminals",
                 heightImage: c.deviceHeight(context) * 0.3,
                 widthImage: c.deviceWidth(context) * 0.8,
-                description: "5 Steps",
+                description: "4 Steps",
                 pathImage: "assets/steps.png",
                 backgroundColor: Color.fromARGB(255, 255, 255, 255),
                 styleDescription: TextStyle(

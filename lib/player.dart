@@ -41,6 +41,7 @@ class _PlayerSongsState extends State<PlayerSongs> {
     // getPlayListData();
     player = AudioPlayer();
     player.setLoopMode(LoopMode.one);
+    
     setState(() {
       audio_url = widget.data['url'];
     });
@@ -54,6 +55,7 @@ class _PlayerSongsState extends State<PlayerSongs> {
         }
       });
     });
+     
     player.setUrl(widget.data['url']).then((_) {
       if (mounted)
         setState(() {

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sns/PageManager.dart';
+import 'package:sns/SamplePlay.dart';
 import 'package:sns/login.dart';
 import 'package:sns/songs.dart';
 import 'NoInternet.dart';
@@ -18,8 +19,8 @@ import 'package:intro_slider/intro_slider.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Category extends StatefulWidget {
-  final sublimals;
-  Category({this.sublimals});
+  final sublimals, name;
+  Category({this.sublimals, required this.name});
   @override
   _CategoryState createState() => _CategoryState();
 }
@@ -138,35 +139,6 @@ class _CategoryState extends State<Category> {
     });
   }
 
-  Songs(token) async {}
-
-  // decodeSongs(js) {
-  //   try {
-  //     print("Songs $no_posts are $js");
-
-  //     var jsonval = json.decode(js);
-  //     data_Songs = jsonval["response"][0]['song_list'];
-
-  //     if (jsonval["response"][0]['status'] == "failed") {
-  //       setState(() {
-  //         isLoading = false;
-  //         no_posts = true;
-  //       });
-  //     } else if (jsonval["response"][0]['status'] == "success") {
-  //       setState(() {
-  //         isLoading = false;
-  //         songData.add(data_Songs[0]);
-  //         initPlayer();
-  //       });
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //       no_posts = true;
-  //     });
-  //   }
-  // }
-
   loadSong(cat_id) async {
     // print("Token i have is $_token");
     try {
@@ -197,7 +169,7 @@ class _CategoryState extends State<Category> {
         Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (_) => AudioManager(
+                builder: (_) => MyPlayer(
                       index: 0,
                       allData: data_Songs,
                       maxlength: data_Songs.length,
@@ -217,7 +189,7 @@ class _CategoryState extends State<Category> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: c.getAppBar("Sound N Soulful"),
+      appBar: c.getAppBar(widget.name ?? "Sound & Soulful"),
       drawer: c.getDrawer(context),
       backgroundColor: Colors.white,
       body: SafeArea(
