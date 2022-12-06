@@ -23,7 +23,7 @@ packages:
     source: hosted
     version: "2.9.0"
   audio_service:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: audio_service
       url: "https://pub.dartlang.org"

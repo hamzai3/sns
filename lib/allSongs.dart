@@ -108,6 +108,8 @@ class _AllSongsState extends State<AllSongs> {
       } else if (jsonval["response"][0]['status'] == "success") {
         setState(() {
           isLoading = false;
+          count = data_AllSongs.length;
+          paginate(10);
         });
       }
     });
@@ -135,6 +137,30 @@ class _AllSongsState extends State<AllSongs> {
     });
   }
 
+  int from = 0, to = 10, count = 0;
+  paginate(val) {
+    setState(() {
+      from = val - 10;
+      to = val;
+      print("From $from and to $to");
+
+      if (temp_data.isEmpty) {
+        temp_data = data_AllSongs;
+      }
+      data_AllSongs = [];
+      print("temp lent = ");
+      print(temp_data.length);
+      for (int d = 0; d < temp_data.length; d++) {
+        if (d > from && d < to) {
+          print("here $d is greater than $from and less tghab $to where");
+          data_AllSongs.add(temp_data[d]);
+        }
+      }
+      print("data lent = ");
+      print(data_AllSongs.length);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +171,7 @@ class _AllSongsState extends State<AllSongs> {
       body: SafeArea(
           child: ListView(
         shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
@@ -158,6 +185,36 @@ class _AllSongsState extends State<AllSongs> {
             ),
           ),
           c.getDivider(10.0),
+          SizedBox(
+              height: 60,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: int.parse(
+                      (int.parse(count.toString()) / 10).round().toString()),
+                  itemBuilder: (BuildContext context, int i) {
+                    i = i + 1;
+                    return GestureDetector(
+                      onTap: () {
+                        print(i * 10);
+                        paginate(i * 10);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          // color: c.primaryColor(),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                          ),
+                          child: Text(
+                            '${(i)}0',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    );
+                  })),
           Center(
             child: isLoading
                 ? Container()
@@ -168,9 +225,9 @@ class _AllSongsState extends State<AllSongs> {
                     : Container(
                         color: Colors.white,
                         child: ListView.builder(
+                            scrollDirection: Axis.vertical,
                             shrinkWrap: true,
                             itemCount: data_AllSongs.length,
-                            physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int i) {
                               return GestureDetector(
                                 onTap: () {

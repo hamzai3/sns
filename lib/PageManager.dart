@@ -729,7 +729,7 @@ class PageManager {
   late AudioPlayer _audioPlayer;
   PageManager(url) {
     _init(url);
-  }
+  }  
 
   void _init(url) async {
     _audioPlayer = AudioPlayer();

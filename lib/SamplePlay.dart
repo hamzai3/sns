@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:sns/constants.dart';
 import 'package:sns/login.dart';
@@ -428,11 +429,20 @@ class MyPlayerState extends State<MyPlayer> with WidgetsBindingObserver {
                 widget.allData != null)
           AudioSource.uri(
             Uri.parse(widget.allData[0]['audio'].toString()),
-            tag: AudioMetadata(
-              title: widget.allData[0]['name'].toString(),
-              album: widget.allData[0]['description'].toString(),
-              artwork: widget.allData[0]['base_url'].toString() +
-                  widget.allData[0]['image'].toString(),
+            // tag: AudioMetadata(
+            //   title: widget.allData[0]['name'].toString(),
+            //   album: widget.allData[0]['description'].toString(),
+            // artwork: widget.allData[0]['base_url'].toString() +
+            //     widget.allData[0]['image'].toString(),
+            // ),
+            tag: MediaItem(
+              // Specify a unique ID for each media item:
+              id: '1',
+              // Metadata to display in the notification:
+              album: widget.allData[0]['name'].toString(),
+              title: widget.allData[0]['description'].toString(),
+              artUri: Uri.parse(widget.allData[0]['base_url'].toString() +
+                  widget.allData[0]['image'].toString()),
             ),
           ),
       ]);
@@ -517,7 +527,7 @@ class MyPlayerState extends State<MyPlayer> with WidgetsBindingObserver {
       // Release the player's resources when not in use. We use "stop" so that
       // if the app resumes later, it will still remember what position to
       // resume from.
-      _player.stop();
+      // _player.stop();
     }
   }
 
