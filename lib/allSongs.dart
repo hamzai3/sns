@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:sns/PageManager.dart';
 import 'package:sns/SamplePlay.dart';
 import 'package:sns/login.dart';
@@ -165,134 +166,184 @@ class _AllSongsState extends State<AllSongs> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: c.getAppBar("Sound & Soulful"),
+      appBar: c.getAppBar("All Songs"),
       drawer: c.getDrawer(context),
       backgroundColor: Colors.white,
       body: SafeArea(
-          child: ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+          child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
-            child: AutoSizeText(
-              "Songs",
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                  fontSize: c.getFontSizeLabel(context) + 8,
-                  fontWeight: FontWeight.w800,
-                  color: c.getColor("grey")),
-            ),
-          ),
-          c.getDivider(10.0),
-          SizedBox(
-              height: 60,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: int.parse(
-                      (int.parse(count.toString()) / 10).round().toString()),
-                  itemBuilder: (BuildContext context, int i) {
-                    i = i + 1;
-                    return GestureDetector(
-                      onTap: () {
-                        print(i * 10);
-                        paginate(i * 10);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          // color: c.primaryColor(),
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                          ),
-                          child: Text(
-                            '${(i)}0',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    );
-                  })),
-          Center(
-            child: isLoading
-                ? Container()
-                : no_posts
-                    ? Center(
-                        child: Text("No AllSongs found in this subliminal"),
-                      )
-                    : Container(
-                        color: Colors.white,
-                        child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: data_AllSongs.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                          builder: (_) => MyPlayer(
-                                                index: i,
-                                                allData: data_AllSongs,
-                                                maxlength: data_AllSongs.length,
-                                              )));
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey,
-                                        width: 0.20,
-                                      ),
-                                    ),
-                                  ),
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.all(8),
-                                    leading: ClipRRect(
-                                      borderRadius: BorderRadius.circular(2.0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: CachedNetworkImage(
-                                          width: c.deviceWidth(context) * 0.2,
-                                          height:
-                                              c.deviceHeight(context) * 0.15,
-                                          imageUrl: data_AllSongs[i]
-                                                  ['base_url'] +
-                                              "" +
-                                              data_AllSongs[i]['image'],
-                                          placeholder: (context, url) =>
-                                              const Padding(
-                                            padding: EdgeInsets.all(58.0),
-                                            child: CircularProgressIndicator(),
+          ListView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              // Padding(
+              //   padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
+              //   child: AutoSizeText(
+              //     "All Songs",
+              //     textAlign: TextAlign.start,
+              //     style: TextStyle(
+              //         fontSize: c.getFontSizeLabel(context) + 8,
+              //         fontWeight: FontWeight.w800,
+              //         color: c.getColor("grey")),
+              //   ),
+              // ),
+              c.getDivider(10.0),
+              SizedBox(
+                height: c.deviceHeight(context) * 0.73,
+                child: isLoading
+                    ? Container()
+                    : no_posts
+                        ? Center(
+                            child: Text("No songs found in this subliminal"),
+                          )
+                        : Container(
+                            color: Colors.white,
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                physics: AlwaysScrollableScrollPhysics(),
+                                itemCount: data_AllSongs.length,
+                                itemBuilder: (BuildContext context, int i) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (player != null) {
+                                        player!.dispose();
+                                      }
+                                      indexx = i;
+                                      allDatax = data_AllSongs;
+                                      maxlengthx = data_AllSongs.length;
+                                      // print("Song" + data_AllSongs[i]["title"]);
+                                      // print("Album" +
+                                      //     data_AllSongs[i]["description"]);
+                                      name = data_AllSongs[i]["title"];
+                                      album = data_AllSongs[i]["description"];
+                                      image = data_AllSongs[i]['base_url']
+                                              .toString() +
+                                          data_AllSongs[i]['image'].toString();
+                                      setState(() {});
+                                      Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (_) => MyPlayer(
+                                                    index: i,
+                                                    allData: data_AllSongs,
+                                                    maxlength:
+                                                        data_AllSongs.length,
+                                                  )));
+                                    },
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color: Colors.grey,
+                                            width: 0.20,
                                           ),
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.circle_outlined),
+                                        ),
+                                      ),
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.all(8),
+                                        leading: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(2.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            child: CachedNetworkImage(
+                                              width:
+                                                  c.deviceWidth(context) * 0.2,
+                                              height: c.deviceHeight(context) *
+                                                  0.15,
+                                              imageUrl: data_AllSongs[i]
+                                                      ['base_url'] +
+                                                  "" +
+                                                  data_AllSongs[i]['image'],
+                                              placeholder: (context, url) =>
+                                                  const Padding(
+                                                padding: EdgeInsets.all(58.0),
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                              fit: BoxFit.cover,
+                                              errorWidget: (context, url,
+                                                      error) =>
+                                                  const Icon(
+                                                      Icons.circle_outlined),
+                                            ),
+                                          ),
+                                        ),
+                                        title: AutoSizeText(
+                                          data_AllSongs[i]['name'],
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              fontFamily: c.fontFamily(),
+                                              // fontWeight: FontWeight.w800,
+                                              color: c.getColor("grey")),
+                                        ),
+                                        trailing: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(Icons.arrow_forward_ios),
                                         ),
                                       ),
                                     ),
-                                    title: AutoSizeText(
-                                      data_AllSongs[i]['name'],
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontFamily: c.fontFamily(),
-                                          // fontWeight: FontWeight.w800,
-                                          color: c.getColor("grey")),
-                                    ),
-                                    trailing: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.arrow_forward_ios),
-                                    ),
-                                  ),
+                                  );
+                                }),
+                          ),
+              ),
+              SizedBox(
+                  height: 60,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: int.parse((int.parse(count.toString()) / 10)
+                          .round()
+                          .toString()),
+                      itemBuilder: (BuildContext context, int i) {
+                        i = i + 1;
+                        return GestureDetector(
+                          onTap: () {
+                            print(i * 10);
+                            paginate(i * 10);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              // color: c.primaryColor(),
+                              decoration: BoxDecoration(
+                                color:
+                                    i * 10 == to ? Colors.black : Colors.white,
+                                border: Border.all(
+                                  color: Colors.black,
+                                  style: BorderStyle.solid,
+                                  width: 1.0,
                                 ),
-                              );
-                            }),
-                      ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 1.0),
+                                child: Text(
+                                  'Page ${(i)}',
+                                  style: TextStyle(
+                                      fontSize: i * 10 == to
+                                          ? c.getFontSize(context) - 2
+                                          : c.getFontSize(context) - 4,
+                                      color: i * 10 == to
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: i * 10 == to
+                                          ? FontWeight.w700
+                                          : FontWeight.w100),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      })),
+            ],
           ),
+          c.getPLayerSnackbar(context)
         ],
       )),
     );

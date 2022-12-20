@@ -7,9 +7,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:sns/category.dart';
 import 'package:sns/login.dart';
 import 'NoInternet.dart';
+import 'SamplePlay.dart';
 import 'bottomNav.dart';
 import 'constants.dart';
 import 'register.dart';
@@ -224,212 +226,279 @@ class _HomeState extends State<Home> {
       appBar: c.getAppBar("Home"),
       drawer: c.getDrawer(context),
       backgroundColor: Colors.white,
-      body: WillPopScope(
-        onWillPop: () => _exitApp(context),
-        child: SafeArea(
-            child: ListView(
-          shrinkWrap: true,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
-              child: AutoSizeText(
-                "Testimonials",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: c.getFontSizeLabel(context) + 8,
-                    fontWeight: FontWeight.w800,
-                    color: c.getColor("grey")),
-              ),
-            ),
-            c.getDivider(1.0),
-            isLoadingTesti
-                ? Container()
-                : Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: SizedBox(
-                      height: c.deviceHeight(context) * 0.27,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20), // Image border
-                        child: Container(
-                          // width: c.deviceWidth(context) * 0.96,
-                          color: Colors.black,
-                          child: CarouselSlider.builder(
-                            options: CarouselOptions(
-                              aspectRatio: 16 / 9,
-                              viewportFraction: 1,
-                              initialPage: 0,
-                              enableInfiniteScroll: false,
-                              reverse: false,
-                              autoPlay: true,
-                              autoPlayInterval: Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  Duration(milliseconds: 100),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enlargeCenterPage: false,
-                              scrollDirection: Axis.horizontal,
-                              height: MediaQuery.of(context).orientation ==
-                                      Orientation.portrait
-                                  ? MediaQuery.of(context).size.height * 0.40
-                                  : MediaQuery.of(context).size.height * 0.75,
-                            ),
-                            itemCount: testimonial.length,
-                            itemBuilder: (BuildContext context, int i,
-                                    int pageViewIndex) =>
-                                InkWell(
-                              onTap: () {
-                                Future.delayed(Duration(seconds: 1), () {});
-                              },
-                              child: SizedBox.fromSize(
-                                  size: Size.fromRadius(c.deviceWidth(context) *
-                                      0.9), // Image radius
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Text.rich(
-                                            textAlign: TextAlign.center,
-                                            TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: testimonial[i]
-                                                          ['description']
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          c.getFontSizeLabel(
-                                                                  context) -
-                                                              2),
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          // Container(
+          //   margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
+          //   height: 75,
+          //   decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //           begin: Alignment.topLeft,
+          //           end: const Alignment(0, 5),
+          //           colors: [
+          //             // snapshot.data?.lightMutedColor?.color ??
+          //             Colors.grey,
+          //             Colors.grey,
+          //             // snapshot.data?.mutedColor?.color ?? Colors.grey,
+          //           ]),
+          //       borderRadius: BorderRadius.circular(20)),
+          //   child: ListTile(
+          //     leading: CircleAvatar(
+          //       radius: 30,
+          //       backgroundColor: Colors.grey,
+          //     ),
+          //     // backgroundImage: AssetImage(
+          //     //     player.getCurrentAudioImage?.path ?? '')),
+          //     onTap: () {},
+          //     title: Text("abc"),
+          //     subtitle: Text("abc"),
+          //     trailing: IconButton(
+          //       padding: EdgeInsets.zero,
+          //       onPressed: () async {
+          //         // await player.playOrPause();
+          //       },
+          //       icon: const Icon(Icons.pause),
+          //       //  isPlaying
+          //       //     ? const Icon(Icons.pause)
+          //       //     : const Icon(Icons.play_arrow),
+          //     ),
+          //   ),
+          // ),
+          WillPopScope(
+            onWillPop: () => _exitApp(context),
+            child: SafeArea(
+                child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                  child: AutoSizeText(
+                    "Subliminals",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: c.getFontSizeLabel(context),
+                        fontWeight: FontWeight.w800,
+                        color: c.getColor("grey")),
+                  ),
+                ),
+                Center(
+                  child: isLoading
+                      ? Container()
+                      : no_posts
+                          ? const Center(
+                              child: Text("No Subliminal Found"),
+                            )
+                          : SizedBox(
+                              height: c.deviceHeight(context) * 0.585,
+                              child: Container(
+                                padding: EdgeInsets.all(20),
+                                color: Colors.white,
+                                child: GridView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: data_Subliminals.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 12 / 12,
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 10,
+                                      // mainAxisSpacing: 10,
+                                    ),
+                                    itemBuilder: (BuildContext context, int i) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (_) => Category(
+                                                      sublimals:
+                                                          data_Subliminals[i]
+                                                              ['id'],
+                                                      name: data_Subliminals[i]
+                                                          ['name'])));
+                                        },
+                                        child: Container(
+                                          padding:
+                                              EdgeInsets.fromLTRB(1, 10, 1, 5),
+                                          margin:
+                                              EdgeInsets.fromLTRB(1, 5, 1, 5),
+                                          decoration: c.neuroMorphicDecor(),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SizedBox(
+                                                  child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          2.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    child: CachedNetworkImage(
+                                                      width: c.deviceWidth(
+                                                              context) *
+                                                          0.11,
+                                                      height: c.deviceWidth(
+                                                              context) *
+                                                          0.11,
+                                                      imageUrl:
+                                                          data_Subliminals[i]
+                                                                  ['base_url'] +
+                                                              "" +
+                                                              data_Subliminals[
+                                                                      i][
+                                                                  'image_path'],
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              const Padding(
+                                                        padding: EdgeInsets.all(
+                                                            58.0),
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          const Icon(Icons
+                                                              .circle_outlined),
+                                                    ),
+                                                  ),
                                                 ),
-                                                TextSpan(
-                                                  text: "\n~" +
-                                                      testimonial[i]
-                                                              ['user_name']
-                                                          .toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          c.getFontSizeLarge(
-                                                                  context) -
-                                                              12),
-                                                ),
-                                              ],
-                                            ),
+                                              )),
+                                              AutoSizeText(
+                                                data_Subliminals[i]['name'],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        c.getFontSizeLabel(
+                                                                context) -
+                                                            5,
+                                                    // fontWeight: FontWeight.w800,
+                                                    color: c.getColor("grey")),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  )),
+                                      );
+                                    }),
+                              ),
+                            ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: AutoSizeText(
+                    "Testimonials",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: c.getFontSizeLabel(context),
+                        fontWeight: FontWeight.w800,
+                        color: c.getColor("grey")),
+                  ),
+                ),
+                isLoadingTesti
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: SizedBox(
+                          height: c.deviceHeight(context) * 0.20,
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(20), // Image border
+                            child: Container(
+                              // width: c.deviceWidth(context) * 0.96,
+                              decoration:
+                                  BoxDecoration(gradient: c.btnGradient()),
+                              child: CarouselSlider.builder(
+                                options: CarouselOptions(
+                                  aspectRatio: 18 / 9,
+                                  viewportFraction: 1,
+                                  initialPage: 0,
+                                  enableInfiniteScroll: false,
+                                  reverse: false,
+                                  autoPlay: true,
+                                  autoPlayInterval: Duration(seconds: 3),
+                                  autoPlayAnimationDuration:
+                                      Duration(milliseconds: 100),
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  enlargeCenterPage: false,
+                                  scrollDirection: Axis.horizontal,
+                                  height: MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? MediaQuery.of(context).size.height * 0.3
+                                      : MediaQuery.of(context).size.height *
+                                          0.75,
+                                ),
+                                itemCount: testimonial.length,
+                                itemBuilder: (BuildContext context, int i,
+                                        int pageViewIndex) =>
+                                    InkWell(
+                                  onTap: () {
+                                    Future.delayed(Duration(seconds: 1), () {});
+                                  },
+                                  child: SizedBox.fromSize(
+                                      size: Size.fromRadius(
+                                          c.deviceWidth(context) *
+                                              0.9), // Image radius
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: Text.rich(
+                                                textAlign: TextAlign.center,
+                                                TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: testimonial[i]
+                                                              ['description']
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize:
+                                                              c.getFontSizeLabel(
+                                                                      context) -
+                                                                  2),
+                                                    ),
+                                                    TextSpan(
+                                                      text: "\n~" +
+                                                          testimonial[i]
+                                                                  ['user_name']
+                                                              .toString(),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontSize:
+                                                              c.getFontSizeLarge(
+                                                                      context) -
+                                                                  12),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
-              child: AutoSizeText(
-                "Subliminals",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: c.getFontSizeLabel(context) + 8,
-                    fontWeight: FontWeight.w800,
-                    color: c.getColor("grey")),
-              ),
-            ),
-            c.getDivider(10.0),
-            Center(
-              child: isLoading
-                  ? Container()
-                  : no_posts
-                      ? const Center(
-                          child: Text("No Subliminal Found"),
-                        )
-                      : Container(
-                          padding: EdgeInsets.all(20),
-                          color: Colors.white,
-                          child: GridView.builder(
-                              shrinkWrap: true,
-                              itemCount: data_Subliminals.length,
-                              physics: NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 12 / 19,
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                              ),
-                              itemBuilder: (BuildContext context, int i) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (_) => Category(
-                                                sublimals: data_Subliminals[i]
-                                                    ['id'],
-                                                name: data_Subliminals[i]
-                                                    ['name'])));
-                                  },
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                          child: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(2.0),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: CachedNetworkImage(
-                                              width:
-                                                  c.deviceWidth(context) * 0.28,
-                                              height:
-                                                  c.deviceWidth(context) * 0.28,
-                                              imageUrl: data_Subliminals[i]
-                                                      ['base_url'] +
-                                                  "" +
-                                                  data_Subliminals[i]
-                                                      ['image_path'],
-                                              placeholder: (context, url) =>
-                                                  const Padding(
-                                                padding: EdgeInsets.all(58.0),
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                              fit: BoxFit.cover,
-                                              errorWidget: (context, url,
-                                                      error) =>
-                                                  const Icon(
-                                                      Icons.circle_outlined),
-                                            ),
-                                          ),
-                                        ),
-                                      )),
-                                      AutoSizeText(
-                                        data_Subliminals[i]['name'],
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize:
-                                                c.getFontSizeLabel(context) - 4,
-                                            // fontWeight: FontWeight.w800,
-                                            color: c.getColor("grey")),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                        ),
-            )
-          ],
-        )),
+              ],
+            )),
+          ),
+          c.getPLayerSnackbar(context)
+        ],
       ),
       // bottomNavigationBar: BottomNav(currentPage: 0),
     );

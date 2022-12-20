@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:sns/PLaylistPlayer.dart';
 import 'package:sns/PageManager.dart';
 import 'package:sns/SamplePlay.dart';
@@ -389,9 +388,6 @@ class _MyPlaylistState extends State<MyPlaylist> {
         //         builder: (_) => Songs(
         //               cat_id: cat_id,
         //             )));
-        if (player != null) {
-          player!.dispose();
-        }
         Navigator.push(
             context,
             CupertinoPageRoute(
@@ -418,131 +414,96 @@ class _MyPlaylistState extends State<MyPlaylist> {
       appBar: c.getAppBar("Sound & Soulful"),
       drawer: c.getDrawer(context),
       backgroundColor: Colors.white,
-      body: Stack(
-        alignment: Alignment.bottomCenter,
+      body: SafeArea(
+          child: ListView(
+        shrinkWrap: true,
         children: [
-          SafeArea(
-              child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 12, 10, 0),
-                      child: AutoSizeText(
-                        "My Playlist",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontSize: c.getFontSizeLabel(context) + 8,
-                            fontWeight: FontWeight.w800,
-                            color: c.getColor("grey")),
-                      ),
-                    ),
-                    c.getDivider(10.0),
-                    Center(
-                      child: isLoading
-                          ? Container()
-                          : no_posts
-                              ? Center(
-                                  child: Text("No Playlist found"),
-                                )
-                              : Container(
-                                  padding: EdgeInsets.all(10),
-                                  color: Colors.white,
-                                  child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: data_MyPlaylist.length,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder:
-                                          (BuildContext context, int i) {
-                                        return GestureDetector(
-                                          onLongPress: () {
-                                            setState(() {
-                                              pwd.text =
-                                                  data_MyPlaylist[i]['name'];
-                                              showAlert(
-                                                  context,
-                                                  data_MyPlaylist[i]
-                                                      ['playlist_id']);
-                                            });
-                                          },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 12, 10, 0),
+            child: AutoSizeText(
+              "My Playlist",
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  fontSize: c.getFontSizeLabel(context) + 8,
+                  fontWeight: FontWeight.w800,
+                  color: c.getColor("grey")),
+            ),
+          ),
+          c.getDivider(10.0),
+          Center(
+            child: isLoading
+                ? Container()
+                : no_posts
+                    ? Center(
+                        child: Text("No Playlist found"),
+                      )
+                    : Container(
+                        padding: EdgeInsets.all(10),
+                        color: Colors.white,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: data_MyPlaylist.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int i) {
+                              return GestureDetector(
+                                onLongPress: () {
+                                  setState(() {
+                                    pwd.text = data_MyPlaylist[i]['name'];
+                                    showAlert(context,
+                                        data_MyPlaylist[i]['playlist_id']);
+                                  });
+                                },
+                                onTap: () {
+                                  loadSong(data_MyPlaylist[i]['playlist_id']);
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Colors.grey,
+                                        width: 0.20,
+                                      ),
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.all(8),
+                                    title: AutoSizeText(
+                                      c.capitalize(data_MyPlaylist[i]['name']),
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: c.fontFamily(),
+                                          color: c.getColor("grey")),
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
                                           onTap: () {
-                                            loadSong(data_MyPlaylist[i]
-                                                ['playlist_id']);
+                                            showConfirm(
+                                                context,
+                                                data_MyPlaylist[i]
+                                                    ['playlist_id']);
                                           },
-                                          child: Container(
-                                            decoration: c.neuroMorphicDecor(),
-                                            padding: EdgeInsets.all(10),
-                                            margin: EdgeInsets.only(bottom: 10),
-                                            child: ListTile(
-                                              contentPadding: EdgeInsets.all(8),
-                                              title: AutoSizeText(
-                                                c.capitalize(
-                                                    data_MyPlaylist[i]['name']),
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
-                                                    fontFamily: c.fontFamily(),
-                                                    color: c.getColor("grey")),
-                                              ),
-                                              trailing: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        pwd.text =
-                                                            data_MyPlaylist[i]
-                                                                ['name'];
-                                                        showAlert(
-                                                            context,
-                                                            data_MyPlaylist[i][
-                                                                'playlist_id']);
-                                                      });
-                                                    },
-                                                    child: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Icon(Icons.edit),
-                                                    ),
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      showConfirm(
-                                                          context,
-                                                          data_MyPlaylist[i]
-                                                              ['playlist_id']);
-                                                    },
-                                                    child: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Icon(
-                                                          Icons.delete_forever),
-                                                    ),
-                                                  ),
-                                                  const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child: Icon(Icons
-                                                        .arrow_forward_ios),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(Icons.delete_forever),
                                           ),
-                                        );
-                                      }),
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(Icons.arrow_forward_ios),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )),
-          c.getPLayerSnackbar(context)
+                              );
+                            }),
+                      ),
+          ),
         ],
-      ),
+      )),
     );
   }
 }

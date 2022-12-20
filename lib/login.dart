@@ -12,6 +12,8 @@ import 'package:sns/constants.dart';
 import 'forgot.dart';
 import 'intros.dart';
 import 'register.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart' as con;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -135,24 +137,39 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(28.0),
+                            child: Image.asset(
+                              "assets/sns.gif",
+                              width: 200,
+                            ),
+                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      c.deviceWidth(context) * 0.3,
-                                      c.deviceWidth(context) * 0.4,
-                                      c.deviceWidth(context) * 0.3,
-                                      c.deviceWidth(context) * 0.2),
+                                  padding: EdgeInsets.symmetric(horizontal: 17),
                                   child: AutoSizeText(
-                                    'Login',
-                                    textAlign: TextAlign.center,
+                                    'Welcome Onboard',
+                                    textAlign: TextAlign.left,
                                     style: TextStyle(
-                                      fontFamily:
-                                          c.fontFamily(type: "pacifico"),
-                                      fontSize: c.getFontSizeLarge(context) + 5,
+                                      fontFamily: c.fontFamily(),
+                                      fontSize: c.getFontSizeLarge(context),
                                       fontWeight: FontWeight.w800,
                                     ),
+                                  )),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 17),
+                                  child: AutoSizeText(
+                                    'Login to continue'.toString(),
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                        fontSize: c.getFontSizeSmall(context),
+                                        // fontWeight: FontWeight.w800,
+                                        color: c.getColor("grey")),
                                   )),
                             ],
                           ),
@@ -166,38 +183,55 @@ class _LoginPageState extends State<LoginPage> {
                               height:
                                   MediaQuery.of(context).size.height * 0.082,
                               width: MediaQuery.of(context).size.width * 8.0,
-                              child: TextFormField(
-                                keyboardType: TextInputType.text,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    // return 'Mobile number is mandatory';
-                                    return 'Email ID cannot be empty';
-                                  }
-                                  if (!value.contains("@")) {
-                                    // return 'Mobile number is mandatory';
-                                    return 'Invalid Email ID';
-                                  }
-                                },
-                                controller: email,
-                                style: TextStyle(
-                                    fontSize: c.getFontSize(context),
-                                    color: c.primaryColor()),
-                                decoration: InputDecoration(
-                                  hintText: "Email",
-                                  fillColor: c.primaryColor(),
-                                  filled: false, // dont forget this line
-                                  hintStyle: TextStyle(
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
+                                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
+                                decoration: c.neuroMorphicDecor(),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      // return 'Mobile number is mandatory';
+                                      return 'Email ID cannot be empty';
+                                    }
+                                    if (!value.contains("@")) {
+                                      // return 'Mobile number is mandatory';
+                                      return 'Invalid Email ID';
+                                    }
+                                  },
+                                  controller: email,
+                                  style: TextStyle(
                                       fontSize: c.getFontSize(context),
                                       color: c.primaryColor()),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    borderSide: BorderSide(
-                                      color: c.primaryColor(),
-                                      width: 0,
-                                      style: BorderStyle.none,
+                                  decoration: InputDecoration(
+                                    hintText: "Email",
+                                    fillColor: c.primaryColor(),
+                                    filled: false, // dont forget this line
+                                    hintStyle: TextStyle(
+                                        fontSize: c.getFontSize(context),
+                                        color: c.primaryColor()),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
                                     ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                        width: 0.0,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                        width: 0.0,
+                                      ),
+                                    ),
+                                    contentPadding: EdgeInsets.all(16),
                                   ),
-                                  contentPadding: EdgeInsets.all(16),
                                 ),
                               ),
                             ),
@@ -212,48 +246,67 @@ class _LoginPageState extends State<LoginPage> {
                               height:
                                   MediaQuery.of(context).size.height * 0.082,
                               width: MediaQuery.of(context).size.width * 8.0,
-                              child: TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    // return 'Mobile number is mandatory';
-                                    return 'Password cannot be empty';
-                                  }
-                                },
-                                obscureText: hide_password,
-                                controller: pwd,
-                                style: TextStyle(
-                                    fontSize: c.getFontSize(context),
-                                    color: c.primaryColor()),
-                                decoration: InputDecoration(
-                                  suffix: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (hide_password) {
-                                          hide_password = false;
-                                        } else {
-                                          hide_password = true;
-                                        }
-                                      });
-                                    },
-                                    child: Text(
-                                      hide_password ? "😑" : "😯",
-                                      style: TextStyle(color: c.whiteColor()),
-                                    ),
-                                  ),
-                                  hintText: "Password",
-                                  fillColor: c.primaryColor(),
-                                  filled: false, // dont forget this line
-                                  hintStyle: TextStyle(
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
+                                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
+                                decoration: c.neuroMorphicDecor(),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      // return 'Mobile number is mandatory';
+                                      return 'Password cannot be empty';
+                                    }
+                                  },
+                                  obscureText: hide_password,
+                                  controller: pwd,
+                                  style: TextStyle(
                                       fontSize: c.getFontSize(context),
                                       color: c.primaryColor()),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    borderSide: BorderSide(
-                                      style: BorderStyle.none,
+                                  decoration: InputDecoration(
+                                    suffix: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (hide_password) {
+                                            hide_password = false;
+                                          } else {
+                                            hide_password = true;
+                                          }
+                                        });
+                                      },
+                                      child: Text(
+                                        hide_password ? "😑" : "😯",
+                                        style: TextStyle(color: c.whiteColor()),
+                                      ),
                                     ),
+                                    hintText: "Password",
+                                    fillColor: c.whiteColor(),
+                                    filled: false, // dont forget this line
+                                    hintStyle: TextStyle(
+                                        fontSize: c.getFontSize(context),
+                                        color: c.primaryColor()),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                        width: 0.0,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide(
+                                        color: Colors.white,
+                                        width: 0.0,
+                                      ),
+                                    ),
+                                    contentPadding: EdgeInsets.all(16),
                                   ),
-                                  contentPadding: EdgeInsets.all(16),
                                 ),
                               ),
                             ),
@@ -315,6 +368,7 @@ class _LoginPageState extends State<LoginPage> {
                                     child: Container(
                                       padding: EdgeInsets.all(13),
                                       decoration: BoxDecoration(
+                                        gradient: c.btnGradient(),
                                         color: c.primaryColor(),
                                         borderRadius: BorderRadius.circular(20),
                                       ),

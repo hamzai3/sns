@@ -2,21 +2,128 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:quran_app/annotations.dart';
-// import 'package:quran_app/bookmark.dart';
-// import 'package:quran_app/home.dart';
-// import 'package:quran_app/profile.dart';
-// import 'package:quran_app/settings.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sns/allSongs.dart';
 import 'package:sns/home.dart';
 import 'package:sns/login.dart';
 import 'package:sns/myPlayList.dart';
 import 'package:sns/static.dart';
+import 'SamplePlay.dart';
+
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart' as con;
 
 class Constants {
   fontFamily({type = "regular"}) {
     return type == 'regular' ? 'Poppins-Regular' : 'Pacifico';
+  }
+
+  btnGradient() {
+    return LinearGradient(
+        begin: Alignment.topCenter,
+        end: const Alignment(0, 5),
+        colors: [
+          Color(0xff333333),
+          Color(0xff000000),
+        ]);
+  }
+
+  getPLayerSnackbar(context) {
+    return player!.duration != null
+        ? Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
+            //  height: 75,
+            decoration: BoxDecoration(
+                // gradient: LinearGradient(
+                //     begin: Alignment.topLeft,
+                //     end: const Alignment(0, 5),
+                //     colors:
+                //       // snapshot.data?.lightMutedColor?.color ??
+                //       // Colors.grey,
+                //       Color(0xff252525),
+                //       // snapshot.data?.mutedColor?.color ?? Colors.grey,
+                //     ]),
+                color: Color(0xff252525),
+                borderRadius: BorderRadius.circular(20)),
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: ListTile(
+                leading: Stack(
+                  children: [
+                    CircleAvatar(
+                      child: Image.network(
+                        image ?? "",
+                      ),
+                      // backgroundImage: NetworkImage(
+                      //   image ?? "",
+                      // ),
+                      radius: 30,
+                      backgroundColor: Colors.grey,
+                    ),
+                    CircleAvatar(
+                      child: Image.asset(
+                        "assets/snack.gif",
+                      ),
+                      // backgroundImage: NetworkImage(
+                      //   image ?? "",
+                      // ),
+                      radius: 30,
+                      backgroundColor: Colors.grey,
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  print(player!.position.toString());
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (_) => MyPlayer(
+                                index: indexx,
+                                allData: allDatax,
+                                maxlength: maxlengthx,
+                                seekto: player!.position.inSeconds.toString(),
+                              )));
+                },
+                title: Text(
+                  name ?? "",
+                  style: TextStyle(
+                    color: Color(0xFF3BB8FF),
+                  ),
+                ),
+                subtitle: Text(
+                  "$album\n${(player!.duration!.inMinutes - player!.position.inMinutes).toString()}:00 Mins Remaining",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                trailing: StreamBuilder<PlayerState>(
+                  stream: player!.playerStateStream,
+                  builder: (context, snapshot) {
+                    final playerState = snapshot.data;
+
+                    final processingState = playerState?.processingState;
+
+                    final playing = playerState?.playing;
+
+                    return playing != true
+                        ? IconButton(
+                            icon: const Icon(Icons.play_arrow),
+                            // iconSize: 64.0,
+                            color: Colors.white,
+                            onPressed: player!.play,
+                          )
+                        : IconButton(
+                            icon: const Icon(Icons.pause),
+                            // iconSize: 64.0,
+                            color: Colors.white,
+                            onPressed: player!.pause,
+                          );
+                  },
+                ),
+              ),
+            ),
+          )
+        : Container();
   }
 
   getBaseUrl() {
@@ -26,286 +133,292 @@ class Constants {
   getDrawer(context) {
     return Drawer(
       backgroundColor: backgroundColor(),
-      child: SafeArea(
-        child: ListView(
-          children: [
-            DrawerHeader(child: Image.asset("assets/logo.png")),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.wb_incandescent_outlined),
-              title: Text(
-                'Subliminals',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
+      child: Container(
+        decoration: BoxDecoration(gradient: btnGradient()),
+        child: SafeArea(
+          child: ListView(
+            children: [
+              DrawerHeader(child: Image.asset("assets/sns_white.gif")),
+              Divider(
+                height: 0.5,
               ),
-              onTap: () {
-                Navigator.push(
-                    context, CupertinoPageRoute(builder: (context) => Home()));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.audiotrack_outlined),
-              title: Text(
-                'Songs',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => AllSongs()));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.audio_file_outlined),
-              title: Text(
-                'My Playlists',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => MyPlaylist()));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.short_text_sharp),
-              title: Text(
-                'Instructions',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/instruction.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.settings_input_antenna_sharp),
-              title: Text(
-                'How It Works',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/works.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.spatial_audio_off_outlined),
-              title: Text(
-                'Listening Tips',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/tips.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.help_center_outlined),
-              title: Text(
-                'FAQ',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/faq.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.mail_outline),
-              title: Text(
-                'Contact',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/contact_us.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.handshake_outlined),
-              title: Text(
-                'Disclaimer',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/disclaimer.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.padding_outlined),
-              title: Text(
-                'Privacy Policy',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/privacy.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.padding_outlined),
-              title: Text(
-                'Terms Of Service',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/terms-of-service.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.track_changes),
-              title: Text(
-                'Intellectual Property Notice',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => InAppBrowserExampleScreen(
-                            url:
-                                "https://cubecle.com/team/projects/soundnsoulful/faq.php?source=app")));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            ListTile(
-              leading: Icon(Icons.settings_power_sharp),
-              title: Text(
-                'Logout',
-                style: TextStyle(
-                    fontSize: getFontSizeLabel(context),
-                    color: primaryColor(),
-                    fontWeight: FontWeight.w300),
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => LoginPage()));
-              },
-            ),
-            Divider(
-              height: 0.5,
-            ),
-            GestureDetector(
-              onDoubleTap: () {
-                showInSnackBar(context, "Current App Version is 1.0.1");
-              },
-              child: ListTile(
-                leading: Icon(Icons.upgrade, size: 20),
+              ListTile(
+                leading:
+                    Icon(Icons.wb_incandescent_outlined, color: Colors.white),
                 title: Text(
-                  'Version 1.0.1',
+                  'Subliminals',
                   style: TextStyle(
-                      fontSize: getFontSizeLabel(context) - 3,
-                      color: primaryColor(),
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
                       fontWeight: FontWeight.w300),
                 ),
+                onTap: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => Home()));
+                },
               ),
-            ),
-          ],
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.audiotrack_outlined, color: Colors.white),
+                title: Text(
+                  'Songs',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => AllSongs()));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.audio_file_outlined, color: Colors.white),
+                title: Text(
+                  'My Playlists',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => MyPlaylist()));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.short_text_sharp, color: Colors.white),
+                title: Text(
+                  'Instructions',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/instruction-app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.settings_input_antenna_sharp,
+                    color: Colors.white),
+                title: Text(
+                  'How It Works',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/works-app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading:
+                    Icon(Icons.spatial_audio_off_outlined, color: Colors.white),
+                title: Text(
+                  'Listening Tips',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/tips_app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.help_center_outlined, color: Colors.white),
+                title: Text(
+                  'FAQ',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/faq-app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.mail_outline, color: Colors.white),
+                title: Text(
+                  'Contact',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/contact_us_app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.handshake_outlined, color: Colors.white),
+                title: Text(
+                  'Disclaimer',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/disclaimer_app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.padding_outlined, color: Colors.white),
+                title: Text(
+                  'Privacy Policy',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/privacy-app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.padding_outlined, color: Colors.white),
+                title: Text(
+                  'Terms Of Service',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/terms-of-service-app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.track_changes, color: Colors.white),
+                title: Text(
+                  'Intellectual Property Notice',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => InAppBrowserExampleScreen(
+                              url:
+                                  "https://cubecle.com/team/projects/soundnsoulful/intellectual-property-notice-app.php")));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading: Icon(Icons.settings_power_sharp, color: Colors.white),
+                title: Text(
+                  'Logout',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => LoginPage()));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              GestureDetector(
+                onDoubleTap: () {
+                  showInSnackBar(context, "Current App Version is 1.0.1");
+                },
+                child: ListTile(
+                  leading: Icon(Icons.upgrade, size: 20, color: Colors.white),
+                  title: Text(
+                    'Version 1.0.1',
+                    style: TextStyle(
+                        fontSize: getFontSizeLabel(context) - 3 - 2,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w300),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -369,7 +482,7 @@ class Constants {
   }
 
   backgroundColor() {
-    return const Color(0xfff2f2f2);
+    return const Color(0xffEEEEEE);
   }
 
   getFontSizeMedium(context) {
@@ -380,6 +493,25 @@ class Constants {
     return deviceHeight(context) * 0.018;
   }
 
+  neuroMorphicDecor() {
+    return con.BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          con.BoxShadow(
+            blurRadius: 25.0,
+            offset: Offset(-28, -20),
+            color: Color.fromARGB(255, 241, 242, 243),
+            inset: true,
+          ),
+          con.BoxShadow(
+            blurRadius: 1.0,
+            inset: true,
+            offset: Offset(2, 4),
+            color: Color(0xffa7a9af),
+          )
+        ]);
+  }
+
   deviceHeight(context) {
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return isPortrait
@@ -388,7 +520,7 @@ class Constants {
   }
 
   getFontSizeSmall(context) {
-    return deviceHeight(context) * 0.015;
+    return deviceHeight(context) * 0.020;
   }
 
   getFontSizeLabel(context) {
@@ -396,7 +528,7 @@ class Constants {
   }
 
   getFontSizeLarge(context) {
-    return deviceHeight(context) * 0.050;
+    return deviceHeight(context) * 0.040;
   }
 
   getColor(str) {

@@ -7,20 +7,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sns/home.dart';
-import 'package:sns/login.dart';
-import 'package:sns/player.dart';
 import 'NoInternet.dart';
 import 'package:sns/constants.dart';
 import 'forgot.dart';
 import 'intros.dart';
 import 'register.dart';
 
-class ForgotPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _ForgotPageState createState() => _ForgotPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _ForgotPageState extends State<ForgotPage> {
+class _LoginPageState extends State<LoginPage> {
   Constants c = Constants();
   final _formKey = GlobalKey<FormState>();
   List? data;
@@ -137,43 +135,25 @@ class _ForgotPageState extends State<ForgotPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(28.0),
-                            child: Image.asset(
-                              "assets/sns.gif",
-                              width: 200,
-                            ),
-                          ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 17),
+                                  padding: EdgeInsets.fromLTRB(
+                                      c.deviceWidth(context) * 0.3,
+                                      c.deviceWidth(context) * 0.4,
+                                      c.deviceWidth(context) * 0.3,
+                                      c.deviceWidth(context) * 0.2),
                                   child: AutoSizeText(
-                                    'Reset password',
-                                    textAlign: TextAlign.left,
+                                    'Login',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: c.fontFamily(),
-                                      fontSize: c.getFontSizeLarge(context),
+                                      fontFamily:
+                                          c.fontFamily(type: "pacifico"),
+                                      fontSize: c.getFontSizeLarge(context) + 5,
                                       fontWeight: FontWeight.w800,
                                     ),
                                   )),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 17),
-                                child: AutoSizeText(
-                                  'Enter the email associated with your account and we’ll send an email with instructions to reset your password.'
-                                      .toString(),
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      fontSize: c.getFontSizeSmall(context) - 2,
-                                      // fontWeight: FontWeight.w800,
-                                      color: c.getColor("grey")),
-                                ),
-                              )),
                             ],
                           ),
                           Padding(
@@ -186,56 +166,124 @@ class _ForgotPageState extends State<ForgotPage> {
                               height:
                                   MediaQuery.of(context).size.height * 0.082,
                               width: MediaQuery.of(context).size.width * 8.0,
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
-                                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
-                                decoration: c.neuroMorphicDecor(),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      // return 'Mobile number is mandatory';
-                                      return 'Email ID cannot be empty';
-                                    }
-                                    if (!value.contains("@")) {
-                                      // return 'Mobile number is mandatory';
-                                      return 'Invalid Email ID';
-                                    }
-                                  },
-                                  controller: email,
-                                  style: TextStyle(
+                              child: TextFormField(
+                                keyboardType: TextInputType.text,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Email ID cannot be empty';
+                                  }
+                                  if (!value.contains("@")) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Invalid Email ID';
+                                  }
+                                },
+                                controller: email,
+                                style: TextStyle(
+                                    fontSize: c.getFontSize(context),
+                                    color: c.primaryColor()),
+                                decoration: InputDecoration(
+                                  hintText: "Email",
+                                  fillColor: c.primaryColor(),
+                                  filled: false, // dont forget this line
+                                  hintStyle: TextStyle(
                                       fontSize: c.getFontSize(context),
                                       color: c.primaryColor()),
-                                  decoration: InputDecoration(
-                                    hintText: "Email",
-                                    fillColor: c.primaryColor(),
-                                    filled: false, // dont forget this line
-                                    hintStyle: TextStyle(
-                                        fontSize: c.getFontSize(context),
-                                        color: c.primaryColor()),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                      ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      color: c.primaryColor(),
+                                      width: 0,
+                                      style: BorderStyle.none,
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(16),
                                   ),
+                                  contentPadding: EdgeInsets.all(16),
                                 ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              // top: 10.0,
+                              left: MediaQuery.of(context).size.height * 0.02,
+                              right: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            child: SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.082,
+                              width: MediaQuery.of(context).size.width * 8.0,
+                              child: TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Password cannot be empty';
+                                  }
+                                },
+                                obscureText: hide_password,
+                                controller: pwd,
+                                style: TextStyle(
+                                    fontSize: c.getFontSize(context),
+                                    color: c.primaryColor()),
+                                decoration: InputDecoration(
+                                  suffix: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        if (hide_password) {
+                                          hide_password = false;
+                                        } else {
+                                          hide_password = true;
+                                        }
+                                      });
+                                    },
+                                    child: Text(
+                                      hide_password ? "😑" : "😯",
+                                      style: TextStyle(color: c.whiteColor()),
+                                    ),
+                                  ),
+                                  hintText: "Password",
+                                  fillColor: c.primaryColor(),
+                                  filled: false, // dont forget this line
+                                  hintStyle: TextStyle(
+                                      fontSize: c.getFontSize(context),
+                                      color: c.primaryColor()),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      style: BorderStyle.none,
+                                    ),
+                                  ),
+                                  contentPadding: EdgeInsets.all(16),
+                                ),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Future.delayed(const Duration(seconds: 0), () {
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (_) => ForgotPage()));
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.height * 0.02,
+                                right:
+                                    MediaQuery.of(context).size.height * 0.02,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Forgot Password?",
+                                    style: TextStyle(
+                                      fontSize: c.getFontSize(context),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -253,13 +301,8 @@ class _ForgotPageState extends State<ForgotPage> {
                                   child: InkResponse(
                                     onTap: () {
                                       if (_formKey.currentState!.validate()) {
-                                        print("Reset");
-                                        // _login();
-                                        Future.delayed(Duration(seconds: 1),
-                                            () {
-                                          c.showInSnackBar(context,
-                                              "Email sent for reset link");
-                                        });
+                                        print("Login");
+                                        _login();
                                       }
                                       // Future.delayed(const Duration(seconds: 0), () {
                                       //   Navigator.of(context).pop();
@@ -272,13 +315,12 @@ class _ForgotPageState extends State<ForgotPage> {
                                     child: Container(
                                       padding: EdgeInsets.all(13),
                                       decoration: BoxDecoration(
-                                        gradient: c.btnGradient(),
                                         color: c.primaryColor(),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          "Reset",
+                                          "Login",
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w600,
@@ -296,7 +338,7 @@ class _ForgotPageState extends State<ForgotPage> {
                               Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                      builder: (_) => LoginPage()));
+                                      builder: (_) => RegisterPage()));
                               // CupertinoPageRoute(builder: (context) => AA02Disclaimer())
                             },
                             child: Row(
@@ -308,9 +350,9 @@ class _ForgotPageState extends State<ForgotPage> {
                                         fontSize: c.getFontSizeLabel(context),
                                         fontFamily: c.fontFamily()),
                                     children: [
-                                      TextSpan(text: "I have an account? "),
+                                      TextSpan(text: "Don't have an account? "),
                                       TextSpan(
-                                        text: 'Login',
+                                        text: 'Register',
                                         style: TextStyle(
                                             color: c.primaryColor(),
                                             fontWeight: FontWeight.bold),

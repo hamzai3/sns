@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sns/SamplePlay.dart';
 import 'NoInternet.dart';
 import 'constants.dart';
 import 'home.dart';
@@ -61,44 +60,45 @@ class _RegisterPageState extends State<RegisterPage> {
 
       // final result = await InternetAddress.lookup('www.google.com');
       // if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      FormData formData = FormData.fromMap({
-        "sign_up": "sign_up@sns",
-        "username": alias.text.toString(),
-        "email": email.text.toString(),
-        "password": pwd.text.toString(),
-      });
-      try {
-        var url = c.getBaseUrl() + 'register_api.php';
-        print(url);
-        form_response = await dio.post(
-          url,
-          data: formData,
-        );
-      } on DioError catch (e) {
-        print(e.message);
-      }
-      setState(() {
-        print("Response got " + form_response.toString().trim());
-        var jsonval = json.decode(form_response.toString());
-        data = jsonval["response"];
-        if (data![0]['status'] == "failed") {
-          if (data![0]['reason'] == "verification_pending") {
-            showInSnackBar(
-                "Account verification pending, check registered email for verification link");
-          } else {
-            showInSnackBar("Account with this email already exists, try again");
-          }
-          _isSubmitted = false;
-        } else if (data![0]['status'] == "success") {
-          showInSnackBar("Account Created, Sign in to continue...");
-
-          Future.delayed(Duration(seconds: 2), () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
-          });
-          _isSubmitted = false;
+        FormData formData = FormData.fromMap({
+          "sign_up": "sign_up@sns",
+          "username": alias.text.toString(),
+          "email": email.text.toString(),
+          "password": pwd.text.toString(),
+        });
+        try {
+          var url = c.getBaseUrl() + 'register_api.php';
+          print(url);
+          form_response = await dio.post(
+            url,
+            data: formData,
+          );
+        } on DioError catch (e) {
+          print(e.message);
         }
-      });
+        setState(() {
+          print("Response got " + form_response.toString().trim());
+          var jsonval = json.decode(form_response.toString());
+          data = jsonval["response"];
+          if (data![0]['status'] == "failed") {
+            if (data![0]['reason'] == "verification_pending") {
+              showInSnackBar(
+                  "Account verification pending, check registered email for verification link");
+            } else {
+              showInSnackBar(
+                  "Account with this email already exists, try again");
+            }
+            _isSubmitted = false;
+          } else if (data![0]['status'] == "success") {
+            showInSnackBar("Account Created, Sign in to continue...");
+
+            Future.delayed(Duration(seconds: 2), () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            });
+            _isSubmitted = false;
+          }
+        });
       // } else {
       //   Navigator.pushAndRemoveUntil(
       //       context,
@@ -139,39 +139,24 @@ class _RegisterPageState extends State<RegisterPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(28.0),
-                            child: Image.asset(
-                              "assets/sns.gif",
-                              width: 200,
-                            ),
-                          ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 17),
+                                  padding: EdgeInsets.fromLTRB(
+                                      c.deviceWidth(context) * 0.2,
+                                      c.deviceWidth(context) * 0.3,
+                                      c.deviceWidth(context) * 0.2,
+                                      c.deviceWidth(context) * 0.1),
                                   child: AutoSizeText(
-                                    'Welcome Onboard',
-                                    textAlign: TextAlign.left,
+                                    'Register',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: c.fontFamily(),
-                                      fontSize: c.getFontSizeLarge(context),
+                                      fontFamily:
+                                          c.fontFamily(type: "pacifico"),
+                                      fontSize: c.getFontSizeLarge(context) + 5,
                                       fontWeight: FontWeight.w800,
                                     ),
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 17),
-                                  child: AutoSizeText(
-                                    'Register to continue'.toString(),
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontSize: c.getFontSizeSmall(context),
-                                        // fontWeight: FontWeight.w800,
-                                        color: c.getColor("grey")),
                                   )),
                             ],
                           ),
@@ -185,58 +170,40 @@ class _RegisterPageState extends State<RegisterPage> {
                               height:
                                   MediaQuery.of(context).size.height * 0.082,
                               width: MediaQuery.of(context).size.width * 8.0,
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
-                                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
-                                decoration: c.neuroMorphicDecor(),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.text,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      // return 'Mobile number is mandatory';
-                                      return 'Full name  cannot be empty';
-                                    }
-                                  },
-                                  controller: alias,
-                                  style: TextStyle(
+                              child: TextFormField(
+                                keyboardType: TextInputType.text,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Full name cannot be empty';
+                                  }
+                                },
+                                controller: alias,
+                                style: TextStyle(
+                                    fontSize: c.getFontSize(context),
+                                    color: c.primaryColor()),
+                                decoration: InputDecoration(
+                                  hintText: "Full Name",
+                                  fillColor: c.primaryColor(),
+                                  filled: false, // dont forget this line
+                                  hintStyle: TextStyle(
                                       fontSize: c.getFontSize(context),
                                       color: c.primaryColor()),
-                                  decoration: InputDecoration(
-                                    hintText: "Full name",
-                                    fillColor: c.primaryColor(),
-                                    filled: false, // dont forget this line
-                                    hintStyle: TextStyle(
-                                        fontSize: c.getFontSize(context),
-                                        color: c.primaryColor()),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                      ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      color: c.primaryColor(),
+                                      width: 0,
+                                      style: BorderStyle.none,
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(16),
                                   ),
+                                  contentPadding: EdgeInsets.all(16),
                                 ),
                               ),
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(
-                              top: 10.0,
                               left: MediaQuery.of(context).size.height * 0.02,
                               right: MediaQuery.of(context).size.height * 0.02,
                             ),
@@ -244,55 +211,38 @@ class _RegisterPageState extends State<RegisterPage> {
                               height:
                                   MediaQuery.of(context).size.height * 0.082,
                               width: MediaQuery.of(context).size.width * 8.0,
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
-                                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
-                                decoration: c.neuroMorphicDecor(),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      // return 'Mobile number is mandatory';
-                                      return 'Email ID cannot be empty';
-                                    }
-                                    if (!value.contains("@")) {
-                                      // return 'Mobile number is mandatory';
-                                      return 'Invalid Email ID';
-                                    }
-                                  },
-                                  controller: email,
-                                  style: TextStyle(
+                              child: TextFormField(
+                                keyboardType: TextInputType.text,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Email ID cannot be empty';
+                                  }
+                                  if (!value.contains("@")) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Invalid Email ID';
+                                  }
+                                },
+                                controller: email,
+                                style: TextStyle(
+                                    fontSize: c.getFontSize(context),
+                                    color: c.primaryColor()),
+                                decoration: InputDecoration(
+                                  hintText: "Email",
+                                  fillColor: c.primaryColor(),
+                                  filled: false, // dont forget this line
+                                  hintStyle: TextStyle(
                                       fontSize: c.getFontSize(context),
                                       color: c.primaryColor()),
-                                  decoration: InputDecoration(
-                                    hintText: "Email",
-                                    fillColor: c.primaryColor(),
-                                    filled: false, // dont forget this line
-                                    hintStyle: TextStyle(
-                                        fontSize: c.getFontSize(context),
-                                        color: c.primaryColor()),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                      ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      color: c.primaryColor(),
+                                      width: 0,
+                                      style: BorderStyle.none,
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(16),
                                   ),
+                                  contentPadding: EdgeInsets.all(16),
                                 ),
                               ),
                             ),
@@ -307,67 +257,48 @@ class _RegisterPageState extends State<RegisterPage> {
                               height:
                                   MediaQuery.of(context).size.height * 0.082,
                               width: MediaQuery.of(context).size.width * 8.0,
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
-                                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
-                                decoration: c.neuroMorphicDecor(),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.visiblePassword,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      // return 'Mobile number is mandatory';
-                                      return 'Password cannot be empty';
-                                    }
-                                  },
-                                  obscureText: hide_password,
-                                  controller: pwd,
-                                  style: TextStyle(
+                              child: TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Password cannot be empty';
+                                  }
+                                },
+                                obscureText: hide_password,
+                                controller: pwd,
+                                style: TextStyle(
+                                    fontSize: c.getFontSize(context),
+                                    color: c.primaryColor()),
+                                decoration: InputDecoration(
+                                  suffix: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        if (hide_password) {
+                                          hide_password = false;
+                                        } else {
+                                          hide_password = true;
+                                        }
+                                      });
+                                    },
+                                    child: Text(
+                                      hide_password ? "😑" : "😯",
+                                      style: TextStyle(color: c.whiteColor()),
+                                    ),
+                                  ),
+                                  hintText: "Password",
+                                  fillColor: c.primaryColor(),
+                                  filled: false, // dont forget this line
+                                  hintStyle: TextStyle(
                                       fontSize: c.getFontSize(context),
                                       color: c.primaryColor()),
-                                  decoration: InputDecoration(
-                                    suffix: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          if (hide_password) {
-                                            hide_password = false;
-                                          } else {
-                                            hide_password = true;
-                                          }
-                                        });
-                                      },
-                                      child: Text(
-                                        hide_password ? "😑" : "😯",
-                                        style: TextStyle(color: c.whiteColor()),
-                                      ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      style: BorderStyle.none,
                                     ),
-                                    hintText: "Password",
-                                    fillColor: c.whiteColor(),
-                                    filled: false, // dont forget this line
-                                    hintStyle: TextStyle(
-                                        fontSize: c.getFontSize(context),
-                                        color: c.primaryColor()),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(16),
                                   ),
+                                  contentPadding: EdgeInsets.all(16),
                                 ),
                               ),
                             ),
@@ -382,71 +313,51 @@ class _RegisterPageState extends State<RegisterPage> {
                               height:
                                   MediaQuery.of(context).size.height * 0.082,
                               width: MediaQuery.of(context).size.width * 8.0,
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
-                                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
-                                decoration: c.neuroMorphicDecor(),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.visiblePassword,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      // return 'Mobile number is mandatory';
-                                      return 'Confirm Password cannot be empty';
-                                    }
-                                    if (pwd.text.toString() !=
-                                        value.toString()) {
-                                      return 'Incorrect Password, Re-Enter your password';
-                                    }
-                                  },
-                                  obscureText: hide_cpassword,
-                                  controller: cpwd,
-                                  style: TextStyle(
+                              child: TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    // return 'Mobile number is mandatory';
+                                    return 'Confirm Password cannot be empty';
+                                  }
+                                  if (pwd.text.toString() != value.toString()) {
+                                    return 'Incorrect Password, Re-Enter your password';
+                                  }
+                                },
+                                obscureText: hide_cpassword,
+                                controller: cpwd,
+                                style: TextStyle(
+                                    fontSize: c.getFontSize(context),
+                                    color: c.primaryColor()),
+                                decoration: InputDecoration(
+                                  suffix: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        if (hide_cpassword) {
+                                          hide_cpassword = false;
+                                        } else {
+                                          hide_cpassword = true;
+                                        }
+                                      });
+                                    },
+                                    child: Text(
+                                      hide_cpassword ? "😑" : "😯",
+                                      style: TextStyle(color: c.whiteColor()),
+                                    ),
+                                  ),
+                                  hintText: "Confirm Password",
+                                  fillColor: c.primaryColor(),
+                                  filled: false, // dont forget this line
+                                  hintStyle: TextStyle(
                                       fontSize: c.getFontSize(context),
                                       color: c.primaryColor()),
-                                  decoration: InputDecoration(
-                                    suffix: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          if (hide_password) {
-                                            hide_password = false;
-                                          } else {
-                                            hide_password = true;
-                                          }
-                                        });
-                                      },
-                                      child: Text(
-                                        hide_password ? "😑" : "😯",
-                                        style: TextStyle(color: c.whiteColor()),
-                                      ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      style: BorderStyle.none,
                                     ),
-                                    hintText: "Confirm Password",
-                                    fillColor: c.whiteColor(),
-                                    filled: false, // dont forget this line
-                                    hintStyle: TextStyle(
-                                        fontSize: c.getFontSize(context),
-                                        color: c.primaryColor()),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 0.0,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.all(16),
                                   ),
+                                  contentPadding: EdgeInsets.all(16),
                                 ),
                               ),
                             ),

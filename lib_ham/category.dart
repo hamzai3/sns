@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:sns/PageManager.dart';
 import 'package:sns/SamplePlay.dart';
 import 'package:sns/login.dart';
@@ -167,17 +166,6 @@ class _CategoryState extends State<Category> {
         //         builder: (_) => Songs(
         //               cat_id: cat_id,
         //             )));
-        if (player != null) {
-          player!.dispose();
-        }
-        indexx = 0;
-        allDatax = data_Songs;
-        maxlengthx = data_Songs.length;
-        name = data_Songs[0]["title"];
-        album = data_Songs[0]["description"];
-        image = data_Songs[0]['base_url'].toString() +
-            data_Songs[0]['image'].toString();
-        setState(() {});
         Navigator.push(
             context,
             CupertinoPageRoute(
@@ -204,108 +192,95 @@ class _CategoryState extends State<Category> {
       appBar: c.getAppBar(widget.name ?? "Sound & Soulful"),
       drawer: c.getDrawer(context),
       backgroundColor: Colors.white,
-      body: Stack(
-        alignment: Alignment.bottomCenter,
+      body: SafeArea(
+          child: ListView(
         children: [
-          SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.fromLTRB(18, 1, 18, 18.0),
-            child: ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
-                  child: AutoSizeText(
-                    "Category",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: c.getFontSizeLabel(context) + 8,
-                        fontWeight: FontWeight.w800,
-                        color: c.getColor("grey")),
-                  ),
-                ),
-                c.getDivider(10.0),
-                Center(
-                  child: isLoading
-                      ? Container()
-                      : no_posts
-                          ? Center(
-                              child:
-                                  Text("No category found in this subliminal"),
-                            )
-                          : Container(
-                              color: Colors.white,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: data_Category.length,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (BuildContext context, int i) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        loadSong(data_Category[i]['cat_id']);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.only(bottom: 10),
-                                        decoration: c.neuroMorphicDecor(),
-                                        child: ListTile(
-                                          contentPadding: EdgeInsets.all(8),
-                                          leading: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(2.0),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              child: CachedNetworkImage(
-                                                width: c.deviceWidth(context) *
-                                                    0.2,
-                                                height:
-                                                    c.deviceHeight(context) *
-                                                        0.15,
-                                                imageUrl: data_Category[i]
-                                                        ['base_url'] +
-                                                    "" +
-                                                    data_Category[i]
-                                                        ['image_path'],
-                                                placeholder: (context, url) =>
-                                                    const Padding(
-                                                  padding: EdgeInsets.all(58.0),
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                                fit: BoxFit.cover,
-                                                errorWidget: (context, url,
-                                                        error) =>
-                                                    const Icon(
-                                                        Icons.circle_outlined),
-                                              ),
-                                            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 12, 10, 0),
+            child: AutoSizeText(
+              "Category",
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  fontSize: c.getFontSizeLabel(context) + 8,
+                  fontWeight: FontWeight.w800,
+                  color: c.getColor("grey")),
+            ),
+          ),
+          c.getDivider(10.0),
+          Center(
+            child: isLoading
+                ? Container()
+                : no_posts
+                    ? Center(
+                        child: Text("No category found in this subliminal"),
+                      )
+                    : Container(
+                        color: Colors.white,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: data_Category.length,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int i) {
+                              return GestureDetector(
+                                onTap: () {
+                                  loadSong(data_Category[i]['cat_id']);
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Colors.grey,
+                                        width: 0.20,
+                                      ),
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.all(8),
+                                    leading: ClipRRect(
+                                      borderRadius: BorderRadius.circular(2.0),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: CachedNetworkImage(
+                                          width: c.deviceWidth(context) * 0.2,
+                                          height:
+                                              c.deviceHeight(context) * 0.15,
+                                          imageUrl: data_Category[i]
+                                                  ['base_url'] +
+                                              "" +
+                                              data_Category[i]['image_path'],
+                                          placeholder: (context, url) =>
+                                              const Padding(
+                                            padding: EdgeInsets.all(58.0),
+                                            child: CircularProgressIndicator(),
                                           ),
-                                          title: AutoSizeText(
-                                            data_Category[i]['cat_name'],
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                fontFamily: c.fontFamily(),
-                                                // fontWeight: FontWeight.w800,
-                                                color: c.getColor("grey")),
-                                          ),
-                                          trailing: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child:
-                                                Icon(Icons.arrow_forward_ios),
-                                          ),
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.circle_outlined),
                                         ),
                                       ),
-                                    );
-                                  }),
-                            ),
-                ),
-                c.getDivider(300.0),
-              ],
-            ),
-          )),
-          c.getPLayerSnackbar(context)
+                                    ),
+                                    title: AutoSizeText(
+                                      data_Category[i]['cat_name'],
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontFamily: c.fontFamily(),
+                                          // fontWeight: FontWeight.w800,
+                                          color: c.getColor("grey")),
+                                    ),
+                                    trailing: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(Icons.arrow_forward_ios),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+          ),
+          c.getDivider(300.0),
         ],
-      ),
+      )),
       // bottomNavigationBar: BottomNav(currentPage: 0),
     );
   }
