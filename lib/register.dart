@@ -214,11 +214,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                         color: Colors.white,
                                       ),
                                     ),
+                                    errorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -281,8 +289,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
+                                    ),
+                                    errorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20),
@@ -352,11 +368,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                         color: Colors.white,
                                       ),
                                     ),
+                                    errorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -431,11 +455,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                         color: Colors.white,
                                       ),
                                     ),
+                                    errorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -577,7 +609,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         fontSize: c.getFontSizeLabel(context),
                                         fontFamily: c.fontFamily()),
                                     children: [
-                                      TextSpan(text: "I have an account? "),
+                                      TextSpan(text: "Already have an account? "),
                                       TextSpan(
                                         text: 'Login',
                                         style: TextStyle(

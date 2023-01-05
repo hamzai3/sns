@@ -219,11 +219,19 @@ class _ForgotPageState extends State<ForgotPage> {
                                         color: Colors.white,
                                       ),
                                     ),
+                                    errorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.001),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -308,9 +316,9 @@ class _ForgotPageState extends State<ForgotPage> {
                                         fontSize: c.getFontSizeLabel(context),
                                         fontFamily: c.fontFamily()),
                                     children: [
-                                      TextSpan(text: "I have an account? "),
+                                      TextSpan(text: "Don't have an account? "),
                                       TextSpan(
-                                        text: 'Login',
+                                        text: 'Register',
                                         style: TextStyle(
                                             color: c.primaryColor(),
                                             fontWeight: FontWeight.bold),

@@ -351,61 +351,90 @@ class MyPlayerState extends State<MyPlayer> with WidgetsBindingObserver {
                     ))
               ],
             ),
-            content: Container(
-              decoration: c.neuroMorphicDecor(),
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-
-                // obscureText: hide_password,
-
-                controller: pwd,
-
-                style: TextStyle(
-                    fontSize: c.getFontSize(context), color: c.primaryColor()),
-
-                decoration: InputDecoration(
-                  hintText: "Enter Playlist Name",
-
-                  fillColor: c.primaryColor(),
-
-                  filled: false, // dont forget this line
-
-                  suffixIcon: GestureDetector(
-                      onTap: () {
-                        c.getshared("token").then((token) {
-                          if (token != '' &&
-                              token != null &&
-                              token != ' ' &&
-                              token != 'null') {
-                            c.getshared("user_id").then((user_id) {
-                              // print("CatVal $value");
-
-                              if (user_id != '' &&
-                                  user_id != null &&
-                                  user_id != ' ' &&
-                                  user_id != 'null') {
-                                Navigator.of(context).pop("cancel");
-
-                                savePlayList(token, user_id, pwd.text);
-                              }
-                            });
-                          }
-                        });
-                      },
-                      child: Icon(Icons.save)),
-
-                  hintStyle: TextStyle(
+            content: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.082,
+              width: MediaQuery.of(context).size.width * 8.0,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(1, 10, 1, 5),
+                margin: EdgeInsets.fromLTRB(1, 5, 1, 5),
+                decoration: c.neuroMorphicDecor(),
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      // return 'Mobile number is mandatory';
+                      return 'Email ID cannot be empty';
+                    }
+                    if (!value.contains("@")) {
+                      // return 'Mobile number is mandatory';
+                      return 'Invalid Email ID';
+                    }
+                  },
+                  controller: pwd,
+                  style: TextStyle(
                       fontSize: c.getFontSize(context),
                       color: c.primaryColor()),
+                  decoration: InputDecoration(
+                    hintText: "Enter Playlist Name",
+                    fillColor: c.primaryColor(),
+                    filled: false, // dont forget this line
+                    suffixIcon: GestureDetector(
+                        onTap: () {
+                          c.getshared("token").then((token) {
+                            if (token != '' &&
+                                token != null &&
+                                token != ' ' &&
+                                token != 'null') {
+                              c.getshared("user_id").then((user_id) {
+                                // print("CatVal $value");
 
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      style: BorderStyle.none,
+                                if (user_id != '' &&
+                                    user_id != null &&
+                                    user_id != ' ' &&
+                                    user_id != 'null') {
+                                  Navigator.of(context).pop("cancel");
+
+                                  savePlayList(token, user_id, pwd.text);
+                                }
+                              });
+                            }
+                          });
+                        },
+                        child: Icon(Icons.save)),
+                    hintStyle: TextStyle(
+                        fontSize: c.getFontSize(context),
+                        color: c.primaryColor()),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 0.001,
+                      ),
                     ),
+                    errorBorder: new OutlineInputBorder(
+                      borderSide:
+                          new BorderSide(color: Colors.white, width: 0.00101),
+                    ),
+                    focusedErrorBorder: new OutlineInputBorder(
+                      borderSide:
+                          new BorderSide(color: Colors.white, width: 0.00101),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 0.001,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 0.001,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.all(16),
                   ),
-
-                  contentPadding: EdgeInsets.all(16),
                 ),
               ),
             ),
@@ -475,7 +504,7 @@ class MyPlayerState extends State<MyPlayer> with WidgetsBindingObserver {
                                         }
                                       });
                                     },
-                                    leading: Icon(Icons.star),
+                                    leading: Icon(Icons.music_note),
                                     title: Row(
                                       children: [
                                         Center(
@@ -759,13 +788,18 @@ class MyPlayerState extends State<MyPlayer> with WidgetsBindingObserver {
                                       IntrinsicHeight(
                                         child: Row(
                                           children: [
-                                            Text(
-                                              positionData == null
-                                                  ? ""
-                                                  : durationFormat(
-                                                      positionData!.position),
-                                              style: const TextStyle(
-                                                  color: Colors.white70),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 18.0),
+                                              child: Text(
+                                                positionData == null
+                                                    ? ""
+                                                    : durationFormat(
+                                                        positionData!.position),
+                                                style: const TextStyle(
+                                                    color: Colors.white70),
+                                              ),
                                             ),
                                             const VerticalDivider(
                                               color: Colors.white54,
@@ -970,8 +1004,9 @@ class MyPlayerState extends State<MyPlayer> with WidgetsBindingObserver {
                                 : null,
                             child: Container(
                               decoration: c.neuroMorphicDecor(),
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.only(bottom: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                               child: ListTile(
                                 leading: Image.network(sequence[i].tag.artwork),
                                 title: Row(children: [

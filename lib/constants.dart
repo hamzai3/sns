@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sns/Subscribe.dart';
 import 'package:sns/allSongs.dart';
 import 'package:sns/home.dart';
 import 'package:sns/login.dart';
@@ -29,10 +30,11 @@ class Constants {
   }
 
   getPLayerSnackbar(context) {
-    return player!.duration != null
+    return player != null && player!.duration != null
         ? Container(
+            width: deviceWidth(context) * 0.9,
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
-            //  height: 75,
+            height: 85,
             decoration: BoxDecoration(
                 // gradient: LinearGradient(
                 //     begin: Alignment.topLeft,
@@ -48,6 +50,7 @@ class Constants {
             child: Padding(
               padding: const EdgeInsets.all(5),
               child: ListTile(
+                contentPadding: EdgeInsets.all(5),
                 leading: Stack(
                   children: [
                     CircleAvatar(
@@ -68,7 +71,7 @@ class Constants {
                       //   image ?? "",
                       // ),
                       radius: 30,
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.transparent,
                     ),
                   ],
                 ),
@@ -91,7 +94,7 @@ class Constants {
                   ),
                 ),
                 subtitle: Text(
-                  "$album\n${(player!.duration!.inMinutes - player!.position.inMinutes).toString()}:00 Mins Remaining",
+                  "${(player!.duration!.inMinutes - player!.position.inMinutes).toString()}:00 Mins Remaining",
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -189,6 +192,24 @@ class Constants {
                 onTap: () {
                   Navigator.push(context,
                       CupertinoPageRoute(builder: (context) => MyPlaylist()));
+                },
+              ),
+              Divider(
+                height: 0.5,
+              ),
+              ListTile(
+                leading:
+                    Icon(Icons.subscriptions_outlined, color: Colors.white),
+                title: Text(
+                  'Subscribe',
+                  style: TextStyle(
+                      fontSize: getFontSizeLabel(context) - 2,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => Subscribe()));
                 },
               ),
               Divider(

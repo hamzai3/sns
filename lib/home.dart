@@ -268,40 +268,146 @@ class _HomeState extends State<Home> {
           WillPopScope(
             onWillPop: () => _exitApp(context),
             child: SafeArea(
-                child: ListView(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                  child: AutoSizeText(
-                    "Subliminals",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: c.getFontSizeLabel(context),
-                        fontWeight: FontWeight.w800,
-                        color: c.getColor("grey")),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: AutoSizeText(
+                      "Testimonials",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: c.getFontSizeLabel(context),
+                          fontWeight: FontWeight.w800,
+                          color: c.getColor("grey")),
+                    ),
                   ),
-                ),
-                Center(
-                  child: isLoading
+                  isLoadingTesti
                       ? Container()
-                      : no_posts
-                          ? const Center(
-                              child: Text("No Subliminal Found"),
-                            )
-                          : SizedBox(
-                              height: c.deviceHeight(context) * 0.585,
+                      : Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: SizedBox(
+                            height: c.deviceHeight(context) * 0.20,
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(20), // Image border
                               child: Container(
+                                // width: c.deviceWidth(context) * 0.96,
+                                decoration:
+                                    BoxDecoration(gradient: c.btnGradient()),
+                                child: CarouselSlider.builder(
+                                  options: CarouselOptions(
+                                    aspectRatio: 18 / 9,
+                                    viewportFraction: 1,
+                                    initialPage: 0,
+                                    enableInfiniteScroll: false,
+                                    reverse: false,
+                                    autoPlay: true,
+                                    autoPlayInterval: Duration(seconds: 3),
+                                    autoPlayAnimationDuration:
+                                        Duration(milliseconds: 100),
+                                    autoPlayCurve: Curves.fastOutSlowIn,
+                                    enlargeCenterPage: false,
+                                    scrollDirection: Axis.horizontal,
+                                    height: MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.portrait
+                                        ? MediaQuery.of(context).size.height *
+                                            0.3
+                                        : MediaQuery.of(context).size.height *
+                                            0.75,
+                                  ),
+                                  itemCount: testimonial.length,
+                                  itemBuilder: (BuildContext context, int i,
+                                          int pageViewIndex) =>
+                                      InkWell(
+                                    onTap: () {
+                                      Future.delayed(
+                                          Duration(seconds: 1), () {});
+                                    },
+                                    child: SizedBox.fromSize(
+                                        size: Size.fromRadius(
+                                            c.deviceWidth(context) *
+                                                0.9), // Image radius
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(20.0),
+                                                child: AutoSizeText.rich(
+                                                  textAlign: TextAlign.center,
+                                                  TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: testimonial[i]
+                                                                ['description']
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                c.getFontSizeLabel(
+                                                                        context) -
+                                                                    4),
+                                                      ),
+                                                      TextSpan(
+                                                        text: "\n~" +
+                                                            testimonial[i][
+                                                                    'user_name']
+                                                                .toString(),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                c.getFontSizeLarge(
+                                                                        context) -
+                                                                    15),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                    child: AutoSizeText(
+                      "Subliminals",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: c.getFontSizeLabel(context),
+                          fontWeight: FontWeight.w800,
+                          color: c.getColor("grey")),
+                    ),
+                  ),
+                  Center(
+                    child: isLoading
+                        ? Container()
+                        : no_posts
+                            ? const Center(
+                                child: Text("No Subliminal Found"),
+                              )
+                            : Container(
                                 padding: EdgeInsets.all(20),
                                 color: Colors.white,
                                 child: GridView.builder(
                                     shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
                                     itemCount: data_Subliminals.length,
                                     gridDelegate:
                                         const SliverGridDelegateWithFixedCrossAxisCount(
                                       childAspectRatio: 12 / 12,
-                                      crossAxisCount: 3,
+                                      crossAxisCount: 2,
                                       crossAxisSpacing: 10,
                                       // mainAxisSpacing: 10,
                                     ),
@@ -342,10 +448,10 @@ class _HomeState extends State<Home> {
                                                     child: CachedNetworkImage(
                                                       width: c.deviceWidth(
                                                               context) *
-                                                          0.11,
+                                                          0.31,
                                                       height: c.deviceWidth(
                                                               context) *
-                                                          0.11,
+                                                          0.31,
                                                       imageUrl:
                                                           data_Subliminals[i]
                                                                   ['base_url'] +
@@ -377,7 +483,7 @@ class _HomeState extends State<Home> {
                                                     fontSize:
                                                         c.getFontSizeLabel(
                                                                 context) -
-                                                            5,
+                                                            2,
                                                     // fontWeight: FontWeight.w800,
                                                     color: c.getColor("grey")),
                                               ),
@@ -387,115 +493,11 @@ class _HomeState extends State<Home> {
                                       );
                                     }),
                               ),
-                            ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: AutoSizeText(
-                    "Testimonials",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: c.getFontSizeLabel(context),
-                        fontWeight: FontWeight.w800,
-                        color: c.getColor("grey")),
                   ),
-                ),
-                isLoadingTesti
-                    ? Container()
-                    : Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: SizedBox(
-                          height: c.deviceHeight(context) * 0.20,
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(20), // Image border
-                            child: Container(
-                              // width: c.deviceWidth(context) * 0.96,
-                              decoration:
-                                  BoxDecoration(gradient: c.btnGradient()),
-                              child: CarouselSlider.builder(
-                                options: CarouselOptions(
-                                  aspectRatio: 18 / 9,
-                                  viewportFraction: 1,
-                                  initialPage: 0,
-                                  enableInfiniteScroll: false,
-                                  reverse: false,
-                                  autoPlay: true,
-                                  autoPlayInterval: Duration(seconds: 3),
-                                  autoPlayAnimationDuration:
-                                      Duration(milliseconds: 100),
-                                  autoPlayCurve: Curves.fastOutSlowIn,
-                                  enlargeCenterPage: false,
-                                  scrollDirection: Axis.horizontal,
-                                  height: MediaQuery.of(context).orientation ==
-                                          Orientation.portrait
-                                      ? MediaQuery.of(context).size.height * 0.3
-                                      : MediaQuery.of(context).size.height *
-                                          0.75,
-                                ),
-                                itemCount: testimonial.length,
-                                itemBuilder: (BuildContext context, int i,
-                                        int pageViewIndex) =>
-                                    InkWell(
-                                  onTap: () {
-                                    Future.delayed(Duration(seconds: 1), () {});
-                                  },
-                                  child: SizedBox.fromSize(
-                                      size: Size.fromRadius(
-                                          c.deviceWidth(context) *
-                                              0.9), // Image radius
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(20.0),
-                                              child: Text.rich(
-                                                textAlign: TextAlign.center,
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: testimonial[i]
-                                                              ['description']
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize:
-                                                              c.getFontSizeLabel(
-                                                                      context) -
-                                                                  2),
-                                                    ),
-                                                    TextSpan(
-                                                      text: "\n~" +
-                                                          testimonial[i]
-                                                                  ['user_name']
-                                                              .toString(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white,
-                                                          fontSize:
-                                                              c.getFontSizeLarge(
-                                                                      context) -
-                                                                  12),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-              ],
-            )),
+                  c.getDivider(c.deviceHeight(context) * 0.15)
+                ],
+              ),
+            ),
           ),
           c.getPLayerSnackbar(context)
         ],

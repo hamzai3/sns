@@ -188,110 +188,8 @@ class _AllSongsState extends State<AllSongs> {
               //         color: c.getColor("grey")),
               //   ),
               // ),
-              c.getDivider(10.0),
               SizedBox(
-                height: c.deviceHeight(context) * 0.73,
-                child: isLoading
-                    ? Container()
-                    : no_posts
-                        ? Center(
-                            child: Text("No songs found in this subliminal"),
-                          )
-                        : Container(
-                            color: Colors.white,
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                physics: AlwaysScrollableScrollPhysics(),
-                                itemCount: data_AllSongs.length,
-                                itemBuilder: (BuildContext context, int i) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      if (player != null) {
-                                        player!.dispose();
-                                      }
-                                      indexx = i;
-                                      allDatax = data_AllSongs;
-                                      maxlengthx = data_AllSongs.length;
-                                      // print("Song" + data_AllSongs[i]["title"]);
-                                      // print("Album" +
-                                      //     data_AllSongs[i]["description"]);
-                                      name = data_AllSongs[i]["title"];
-                                      album = data_AllSongs[i]["description"];
-                                      image = data_AllSongs[i]['base_url']
-                                              .toString() +
-                                          data_AllSongs[i]['image'].toString();
-                                      setState(() {});
-                                      Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: (_) => MyPlayer(
-                                                    index: i,
-                                                    allData: data_AllSongs,
-                                                    maxlength:
-                                                        data_AllSongs.length,
-                                                  )));
-                                    },
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color: Colors.grey,
-                                            width: 0.20,
-                                          ),
-                                        ),
-                                      ),
-                                      child: ListTile(
-                                        contentPadding: EdgeInsets.all(8),
-                                        leading: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(2.0),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: CachedNetworkImage(
-                                              width:
-                                                  c.deviceWidth(context) * 0.2,
-                                              height: c.deviceHeight(context) *
-                                                  0.15,
-                                              imageUrl: data_AllSongs[i]
-                                                      ['base_url'] +
-                                                  "" +
-                                                  data_AllSongs[i]['image'],
-                                              placeholder: (context, url) =>
-                                                  const Padding(
-                                                padding: EdgeInsets.all(58.0),
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                              fit: BoxFit.cover,
-                                              errorWidget: (context, url,
-                                                      error) =>
-                                                  const Icon(
-                                                      Icons.circle_outlined),
-                                            ),
-                                          ),
-                                        ),
-                                        title: AutoSizeText(
-                                          data_AllSongs[i]['name'],
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontFamily: c.fontFamily(),
-                                              // fontWeight: FontWeight.w800,
-                                              color: c.getColor("grey")),
-                                        ),
-                                        trailing: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Icon(Icons.arrow_forward_ios),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                          ),
-              ),
-              SizedBox(
-                  height: 60,
+                  height: c.getFontSize(context) * 3.5,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
@@ -341,6 +239,105 @@ class _AllSongsState extends State<AllSongs> {
                           ),
                         );
                       })),
+              c.getDivider(10.0),
+              SizedBox(
+                height: c.deviceHeight(context) * 0.8,
+                child: isLoading
+                    ? Container()
+                    : no_posts
+                        ? Center(
+                            child: Text("No songs found in this subliminal"),
+                          )
+                        : Container(
+                            color: Colors.white,
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                physics: AlwaysScrollableScrollPhysics(),
+                                itemCount: data_AllSongs.length,
+                                itemBuilder: (BuildContext context, int i) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (player != null) {
+                                        player!.dispose();
+                                      }
+                                      indexx = i;
+                                      allDatax = data_AllSongs;
+                                      maxlengthx = data_AllSongs.length;
+                                      // print("Song" + data_AllSongs[i]["title"]);
+                                      // print("Album" +
+                                      //     data_AllSongs[i]["description"]);
+                                      name = data_AllSongs[i]["title"];
+                                      album = data_AllSongs[i]["description"];
+                                      image = data_AllSongs[i]['base_url']
+                                              .toString() +
+                                          data_AllSongs[i]['image'].toString();
+                                      setState(() {});
+                                      Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (_) => MyPlayer(
+                                                    index: i,
+                                                    allData: data_AllSongs,
+                                                    maxlength:
+                                                        data_AllSongs.length,
+                                                  )));
+                                    },
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 5),
+                                      decoration: c.neuroMorphicDecor(),
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.all(8),
+                                        leading: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(2.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            child: CachedNetworkImage(
+                                              width:
+                                                  c.deviceWidth(context) * 0.2,
+                                              height: c.deviceHeight(context) *
+                                                  0.15,
+                                              imageUrl: data_AllSongs[i]
+                                                      ['base_url'] +
+                                                  "" +
+                                                  data_AllSongs[i]['image'],
+                                              placeholder: (context, url) =>
+                                                  const Padding(
+                                                padding: EdgeInsets.all(58.0),
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                              fit: BoxFit.cover,
+                                              errorWidget: (context, url,
+                                                      error) =>
+                                                  const Icon(
+                                                      Icons.circle_outlined),
+                                            ),
+                                          ),
+                                        ),
+                                        title: AutoSizeText(
+                                          data_AllSongs[i]['name'],
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              fontFamily: c.fontFamily(),
+                                              // fontWeight: FontWeight.w800,
+                                              color: c.getColor("grey")),
+                                        ),
+                                        trailing: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(Icons.arrow_forward_ios),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                          ),
+              ),
             ],
           ),
           c.getPLayerSnackbar(context)

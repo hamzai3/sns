@@ -72,9 +72,12 @@ class _IntrosState extends State<Intros> {
             child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: IntroSlider(
+            // scrollPhysics: ScrollPhysics.,
+
             key: UniqueKey(),
             listContentConfig: [
               ContentConfig(
+                verticalScrollbarBehavior: ScrollbarBehavior.hide,
                 styleTitle: TextStyle(
                     color: Colors.black,
                     fontSize: c.getFontSizeLabel(context) + 8,
@@ -94,6 +97,7 @@ class _IntrosState extends State<Intros> {
                 textAlignDescription: TextAlign.center,
               ),
               ContentConfig(
+                verticalScrollbarBehavior: ScrollbarBehavior.hide,
                 styleTitle: TextStyle(
                     color: Colors.black,
                     fontSize: c.getFontSizeLabel(context) + 8,
@@ -114,6 +118,7 @@ class _IntrosState extends State<Intros> {
                 textAlignDescription: TextAlign.center,
               ),
               ContentConfig(
+                verticalScrollbarBehavior: ScrollbarBehavior.hide,
                 styleTitle: TextStyle(
                     color: Colors.black,
                     fontSize: c.getFontSizeLabel(context) + 8,
@@ -135,6 +140,7 @@ class _IntrosState extends State<Intros> {
                 textAlignDescription: TextAlign.center,
               ),
               ContentConfig(
+                verticalScrollbarBehavior: ScrollbarBehavior.hide,
                 styleTitle: TextStyle(
                     color: Colors.black,
                     fontSize: c.getFontSizeLabel(context) + 8,
@@ -155,6 +161,7 @@ class _IntrosState extends State<Intros> {
                 textAlignDescription: TextAlign.center,
               ),
               ContentConfig(
+                verticalScrollbarBehavior: ScrollbarBehavior.hide,
                 styleTitle: TextStyle(
                     color: Colors.black,
                     fontSize: c.getFontSizeLabel(context) + 8,

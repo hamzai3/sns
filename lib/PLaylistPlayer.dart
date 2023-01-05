@@ -662,13 +662,18 @@ class MyPlayListPlayerState extends State<MyPlayListPlayer>
                                       IntrinsicHeight(
                                         child: Row(
                                           children: [
-                                            Text(
-                                              positionData == null
-                                                  ? ""
-                                                  : durationFormat(
-                                                      positionData.position),
-                                              style: const TextStyle(
-                                                  color: Colors.white70),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 18.0),
+                                              child: Text(
+                                                positionData == null
+                                                    ? ""
+                                                    : durationFormat(
+                                                        positionData.position),
+                                                style: const TextStyle(
+                                                    color: Colors.white70),
+                                              ),
                                             ),
                                             const VerticalDivider(
                                               color: Colors.white54,

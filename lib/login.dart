@@ -214,20 +214,29 @@ class _LoginPageState extends State<LoginPage> {
                                       borderRadius: BorderRadius.circular(20),
                                       borderSide: BorderSide(
                                         color: Colors.white,
+                                        width: 0.001,
                                       ),
+                                    ),
+                                    errorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.00101),
+                                    ),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.00101),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
                                     ),
                                     contentPadding: EdgeInsets.all(16),
@@ -289,20 +298,29 @@ class _LoginPageState extends State<LoginPage> {
                                       borderRadius: BorderRadius.circular(20),
                                       borderSide: BorderSide(
                                         color: Colors.white,
+                                        width: 0.001,
                                       ),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(25.0),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
+                                    ),
+                                    errorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.00101),
+                                    ),
+                                    focusedErrorBorder: new OutlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Colors.white, width: 0.00101),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20),
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 0.0,
+                                        width: 0.001,
                                       ),
                                     ),
                                     contentPadding: EdgeInsets.all(16),
